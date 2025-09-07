@@ -16,4 +16,5 @@ def test_user_can_create_a_flag_with_a_name():
     flag = Flag(name=flag_name)
     # Then
     assert flag.name == flag_name, "Something went very wrong!"
+    assert isinstance(flag, Flag), "Something went very very wrong!!"
     assert isinstance(flag.date_created, datetime.datetime)
