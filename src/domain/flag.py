@@ -17,4 +17,4 @@ class Flag:
     def expired(self) -> bool:
         if self.expiration_date is None:
             return False
-        return self.expiration_date >= self.date_created
+        return self.expiration_date >= datetime.now(tz=utc)
