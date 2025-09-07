@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from src.flag import Flag
-from src.services.flagship_srv import FlagShipService
+from src.domain.flag import Flag
+from src.services.flagship import FlagShipService
 from pydantic import BaseModel
 
 
@@ -21,6 +21,6 @@ def flags() -> list[Flag]:
 
 
 @app.post("/fags")
-def new_flag(flag: FlagRequest):
-    stored_flag = flagship.add(name=flag.name, value=flag.value)
-    return stored_flag.id
+def new_flag(flag: FlagRequest) -> bool:
+    flagship.add(name=flag.name, value=flag.value)
+    return True

@@ -1,4 +1,4 @@
-from src.flag import Flag
+from src.domain.flag import Flag
 
 
 def test_user_can_create_a_flag_with_its_name_and_value():

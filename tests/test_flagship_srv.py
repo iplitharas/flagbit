@@ -1,4 +1,4 @@
-from src.services.flagship_srv import FlagShipService
+from src.services.flagship import FlagShipService
 from uuid import UUID
 
 
