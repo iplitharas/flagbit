@@ -24,4 +24,5 @@ class FlagShipService:
         return new_flag
 
     def list(self) -> list[Flag]:
+        print(self.repo.store)
         return list(self.repo.store.values())
