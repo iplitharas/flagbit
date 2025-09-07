@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "flagship"
+version = "0.0.0"
+description = ""
+authors = ["johnplitharas@gmail.com"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+
+[tool.poetry.group.dev.dependencies]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
