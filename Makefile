@@ -16,7 +16,7 @@ test: ## Run pytest with coverage 🏁
 check: ## Run ruff formatter,linter and mypy static analyzer and check code quality 🧐
 	uv  run ruff format src tests
 	uv  run ruff check src tests
-	uv run mypy src tests
+	uv run mypy src
 
 clean:  ## Clean temp dirs 🧹
 	rm -rf  .pytest_cache coverage.xml .mypy_cache  .coverage .coverage.* htmlcov

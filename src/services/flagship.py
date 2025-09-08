@@ -15,10 +15,10 @@ class FlagAllowedUpdates(TypedDict):
 
 class FlagShipRepo:
     def __init__(self) -> None:
-        self.store: dict[UUID, Flag] = {}
+        self.store: dict[str , Flag] = {}
 
     def save(self, flag: Flag) -> Flag:
-        self.store[flag.id] = flag
+        self.store[str(flag.id)] = flag
         return flag
 
 
@@ -46,7 +46,7 @@ class FlagShipService:
         self.repo.save(flag=new_flag)
         return new_flag
 
-    def update_flag(self, flag_id: UUID, updated_fields: FlagAllowedUpdates) -> Flag:
+    def update_flag(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:
         """
         Users can `update` existing `Flags` in their `store` by `id`.
         """
