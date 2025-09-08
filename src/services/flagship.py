@@ -1,8 +1,16 @@
 from src.domain.flag import Flag
 from uuid import UUID
-
 from src.helpers import new_expiration_date_from_now
 from src.types import EXP_UNIT_T
+
+
+from typing import TypedDict
+
+
+class FlagAllowedUpdates(TypedDict):
+    name: str | None
+    value: bool | None
+    desc: str | None
 
 
 class FlagShipRepo:
@@ -27,7 +35,9 @@ class FlagShipService:
         exp_value: int = 4,
     ) -> Flag:
         """
-        Users can `add` new `Flags` to their `store` by `name` and `value`
+        Users can `add` new `Flags` to their `store` by `name` and `value`.
+        Optionally, they can provide a `desc` and an expiration date.
+
         """
         expiration_date = new_expiration_date_from_now(unit=exp_unit, value=exp_value)
         new_flag = Flag(
@@ -35,6 +45,20 @@ class FlagShipService:
         )
         self.repo.save(flag=new_flag)
         return new_flag
+
+    def update_flag(self, flag_id: UUID, updated_fields: FlagAllowedUpdates) -> Flag:
+        """
+        Users can `update` existing `Flags` in their `store` by `id`.
+        """
+        existing_flag = self.repo.store.get(flag_id)
+        if not existing_flag:
+            raise ValueError("Flag not found")
+
+        for key, value in updated_fields.items():
+            setattr(existing_flag, key, value)
+
+        self.repo.save(existing_flag)
+        return existing_flag
 
     def list(self) -> list[Flag]:
         print(self.repo.store)
