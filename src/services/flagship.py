@@ -1,5 +1,4 @@
 from src.domain.flag import Flag
-from uuid import UUID
 from src.helpers import new_expiration_date_from_now
 from src.types import EXP_UNIT_T
 
@@ -15,7 +14,7 @@ class FlagAllowedUpdates(TypedDict):
 
 class FlagShipRepo:
     def __init__(self) -> None:
-        self.store: dict[str , Flag] = {}
+        self.store: dict[str, Flag] = {}
 
     def save(self, flag: Flag) -> Flag:
         self.store[str(flag.id)] = flag
