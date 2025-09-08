@@ -2,16 +2,10 @@
 
 .DEFAULT_GOAL := help
 
-create-env:
-	python -m venv .env && source .env/bin/activate && pip install --upgrade pip
-
-poetry-install: create-env
-	  source .env/bin/activate && poetry install
-
 install-hooks:
 	uv run  pre-commit install
 
-setup-local-env: poetry-install install-hooks ## Setup the local environment 🔨🐍
+setup-local-env: install-hooks ## Setup the local environment 🔨🐍
 
 test-cov: ## Run pytest with an html coverage report 🏁
 	uv run pytest . -vv -p no:warnings --cov=. --cov-report=xml --cov-report=html
@@ -30,7 +24,7 @@ clean:  ## Clean temp dirs 🧹
 clean-hooks: ## Clean hooks 🧹
 	uv run pre-commit clean
 
-.PHONY: help create-env poetry-install install-hooks setup-local-env test test-cov \
+.PHONY: help  install-hooks setup-local-env test test-cov \
  		 check clean-hooks clean
 
 help:
