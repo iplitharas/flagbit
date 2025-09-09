@@ -3,6 +3,8 @@ import pytest
 from src.services.flagship import FlagShipService, FlagAllowedUpdates
 from src.exceptions import FlagNotFoundException
 from uuid import UUID
+from datetime import datetime, timedelta
+from pytz import utc
 
 
 def test_user_can_add_a_new_flag():
@@ -101,3 +103,43 @@ def test_user_can_see_all_flags():
     # Then
     flags = list(flags_iter)
     assert len(flags) == 2, "We should have only two flags"
+
+
+@pytest.mark.parametrize(
+    "flag_value,expected_value",
+    [
+        pytest.param(True, True, id="Flag should be enabled"),
+        pytest.param(False, False, id="Flag should be disabled"),
+    ],
+)
+def test_user_can_get_flag_value_with_is_enabled_method_if_its_not_expired(
+    flag_value, expected_value
+):
+    """
+    Given a `Flag` which is `enabled`/ it's value is True.
+    When I call the `is_enabled` method
+    Then I'm expecting `True`
+    """
+    # Given
+    flagship = FlagShipService()
+    flagship.create_flag("first flag", value=flag_value)
+    # When
+    received_value = flagship.is_enabled("first flag")
+    # Then
+    assert received_value == expected_value, "Something wrong happened"
+
+
+def test_user_can_see_flag_as_disabled_even_if_value_is_true_but_its_expired():
+    """
+    Given a `Flag` which is `enabled`/ it's value is True but it's expired
+    When I call the `is_enabled` method
+    Then I'm expecting `False`
+    """
+    # Given
+    flagship = FlagShipService()
+    flag = flagship.create_flag("first flag", value=True)
+    flag.expiration_date = datetime.now(tz=utc) - timedelta(days=1)
+    # When
+    received_value = flagship.is_enabled("first flag")
+    # Then
+    assert received_value is False, "Something wrong happened, flag is expired!"
