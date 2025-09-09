@@ -56,11 +56,10 @@ class FlagShipService:
         Try to find the `Flag` by `name` and return its `value`.
         If the `Flag` is not found, raise a `ValueError`.
         """
-        if flag := self.repo.get_flag_by_name(name=name):
-            if flag.expired:
-                return False
-            return flag.value
-        raise FlagNotFoundException
+        flag = self.repo.get_flag_by_name(name=name)
+        if flag is None:
+            raise FlagNotFoundException
+        return False if flag.expired else flag.value
 
     def update_flag(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:
         """
