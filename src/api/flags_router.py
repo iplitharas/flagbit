@@ -1,9 +1,9 @@
 from fastapi import APIRouter
-
+from typing import cast
 from src.api.dependencies import get_flagship_service
 from src.api.models import FlagUpdateRequest, FlagRequest
 from src.domain.flag import Flag
-from src.services.flagship import FlagShipService
+from src.services.flagship import FlagShipService, FlagAllowedUpdates
 from fastapi import Depends
 from fastapi import HTTPException
 
@@ -80,10 +80,15 @@ def update_flag(
     updated_fields: FlagUpdateRequest,
     flagship: FlagShipService = Depends(get_flagship_service),
 ) -> Flag:
-    updated_flag = flagship.update_flag(
-        flag_id=flag_id, updated_fields=updated_fields.model_dump(exclude_unset=True)
-    )
-    return updated_flag
+    try:
+        return flagship.update_flag(
+            flag_id=flag_id,
+            updated_fields=cast(
+                FlagAllowedUpdates, updated_fields.model_dump(exclude_unset=True)
+            ),
+        )
+    except Exception:
+        raise HTTPException(status_code=404, detail="Flag not found")
 
 
 @flags_router.delete(

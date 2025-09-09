@@ -5,7 +5,7 @@ from src.exceptions import FlagNotFoundException
 from typing import TypedDict
 
 
-class FlagAllowedUpdates(TypedDict):
+class FlagAllowedUpdates(TypedDict, total=False):
     name: str | None
     value: bool | None
     desc: str | None
@@ -51,14 +51,13 @@ class FlagShipService:
     def get_flag(self, flag_id: str) -> Flag | None:
         return self.repo.store.get(flag_id)
 
-    def get_flag_value(self, name: str) -> bool | None:
+    def get_flag_value(self, name: str) -> bool:
         """
         Try to find the `Flag` by `name` and return its `value`.
         If the `Flag` is not found, raise a `ValueError`.
         """
         if flag := self.repo.get_flag_by_name(name=name):
             return flag.value
-
         raise FlagNotFoundException
 
     def update_flag(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:
