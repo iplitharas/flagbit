@@ -108,5 +108,8 @@ class FlagShipService:
         self.repo.save(flag)
         return flag
 
-    def get_all_flags(self) -> list[Flag] | None:
-        return [ flag for flag in self.repo.store.values()]
+    def get_all_flags(self, flag_name: str | None = None) -> list[Flag] | None:
+        if flag_name:
+            flag = self.get_flag_by_name(name=flag_name)
+            return [flag] if flag else []
+        return [flag for flag in self.repo.store.values()]
