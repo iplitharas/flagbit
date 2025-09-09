@@ -25,14 +25,18 @@ def flags(
     return flagship.get_all_flags(flag_name=flag_name)
 
 
-@flags_router.get("/flags/{flag_name}/value", tags=["Flags"], name="Get flag value",
-                  description="Retrieve the value of a feature flag by name")
+@flags_router.get(
+    "/flags/{flag_name}/value",
+    tags=["Flags"],
+    name="Get flag value",
+    description="Retrieve the value of a feature flag by name",
+)
 def get_flag_value(
     flag_name: str, flagship: FlagShipService = Depends(get_flagship_service)
 ) -> bool:
     try:
         return flagship.get_flag_value(name=flag_name)
-    except ValueError as e:
+    except Exception as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
 
 
@@ -46,7 +50,7 @@ def get_flag_value(
 def get_flag_by_id(
     flag_id: str, flagship: FlagShipService = Depends(get_flagship_service)
 ) -> Flag:
-    if flag := flagship.get_flag_by_id(flag_id=flag_id):
+    if flag := flagship.get_flag(flag_id=flag_id):
         return flag
     raise HTTPException(status_code=404, detail="Flag not found")
 
@@ -76,7 +80,7 @@ def update_flag(
     updated_fields: FlagUpdateRequest,
     flagship: FlagShipService = Depends(get_flagship_service),
 ) -> Flag:
-    updated_flag = flagship.update_flag_by_id(
+    updated_flag = flagship.update_flag(
         flag_id=flag_id, updated_fields=updated_fields.model_dump(exclude_unset=True)
     )
     return updated_flag
@@ -91,7 +95,7 @@ def update_flag(
 def delete_flag(
     flag_id: str, flagship: FlagShipService = Depends(get_flagship_service)
 ) -> bool:
-    success = flagship.delete_flag_by_id(flag_id=flag_id)
+    success = flagship.delete_flag(flag_id=flag_id)
     if not success:
         raise ValueError("Flag not found")
     return success

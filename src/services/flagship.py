@@ -1,7 +1,7 @@
 from src.domain.flag import Flag
 from src.helpers import new_expiration_date_from_now
 from src.types import EXP_UNIT_T
-
+from src.exceptions import FlagNotFoundException
 from typing import TypedDict
 
 
@@ -48,10 +48,7 @@ class FlagShipService:
         self.repo.save(flag=new_flag)
         return new_flag
 
-    def get_flag_by_name(self, name: str) -> Flag | None:
-        return self.repo.get_flag_by_name(name=name)
-
-    def get_flag_by_id(self, flag_id: str) -> Flag | None:
+    def get_flag(self, flag_id: str) -> Flag | None:
         return self.repo.store.get(flag_id)
 
     def get_flag_value(self, name: str) -> bool | None:
@@ -59,36 +56,20 @@ class FlagShipService:
         Try to find the `Flag` by `name` and return its `value`.
         If the `Flag` is not found, raise a `ValueError`.
         """
-        flag = self.get_flag_by_name(name=name)
-        if not flag:
-            raise ValueError("Flag not found")
-        return flag.value
+        if flag := self.repo.get_flag_by_name(name=name):
+            return flag.value
 
-    def update_flag_by_name(
-        self, name: str, updated_fields: FlagAllowedUpdates
-    ) -> Flag:
-        """
-        Try to find the `Flag` by `name` and update it with the provided fields.
-        If the `Flag` is not found, raise a `ValueError`.
-        """
-        existing_flag = self.get_flag_by_name(name=name)
-        if not existing_flag:
-            raise ValueError("Flag not found")
-        return self._update_flag(flag=existing_flag, updated_fields=updated_fields)
+        raise FlagNotFoundException
 
-    def update_flag_by_id(
-        self, flag_id: str, updated_fields: FlagAllowedUpdates
-    ) -> Flag:
+    def update_flag(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:
         """
         Users can `update` existing `Flags` in their `store` by `id`.
         """
-        existing_flag = self.repo.store.get(flag_id)
-        if not existing_flag:
-            raise ValueError("Flag not found")
+        if existing_flag := self.repo.store.get(flag_id):
+            return self._update_flag(flag=existing_flag, updated_fields=updated_fields)
+        raise FlagNotFoundException
 
-        return self._update_flag(flag=existing_flag, updated_fields=updated_fields)
-
-    def delete_flag_by_id(self, flag_id: str) -> bool:
+    def delete_flag(self, flag_id: str) -> bool:
         """
         Users can `delete` existing `Flags` in their `store` by `id`.
         """
@@ -110,6 +91,6 @@ class FlagShipService:
 
     def get_all_flags(self, flag_name: str | None = None) -> list[Flag] | None:
         if flag_name:
-            flag = self.get_flag_by_name(name=flag_name)
+            flag = self.repo.get_flag_by_name(name=flag_name)
             return [flag] if flag else []
         return [flag for flag in self.repo.store.values()]
