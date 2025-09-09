@@ -2,7 +2,6 @@ from src.domain.flag import Flag
 from src.helpers import new_expiration_date_from_now
 from src.types import EXP_UNIT_T
 
-
 from typing import TypedDict
 
 
@@ -20,12 +19,18 @@ class FlagShipRepo:
         self.store[str(flag.id)] = flag
         return flag
 
+    def get_flag_by_name(self, name: str) -> Flag | None:
+        for flag in self.store.values():
+            if flag.name == name:
+                return flag
+        return None
+
 
 class FlagShipService:
     def __init__(self, repo: FlagShipRepo | None = None) -> None:
         self.repo = repo or FlagShipRepo()
 
-    def add(
+    def create_flag(
         self,
         name: str,
         value: bool,
@@ -34,9 +39,7 @@ class FlagShipService:
         exp_value: int = 4,
     ) -> Flag:
         """
-        Users can `add` new `Flags` to their `store` by `name` and `value`.
-        Optionally, they can provide a `desc` and an expiration date.
-
+        Create a new `Flag` with the provided `name`, `value`, `desc`, `exp_unit` and `exp_value`.
         """
         expiration_date = new_expiration_date_from_now(unit=exp_unit, value=exp_value)
         new_flag = Flag(
@@ -45,7 +48,35 @@ class FlagShipService:
         self.repo.save(flag=new_flag)
         return new_flag
 
-    def update_flag(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:
+    def get_flag_by_name(self, name: str) -> Flag | None:
+        return self.repo.get_flag_by_name(name=name)
+
+    def get_flag_by_id(self, flag_id: str) -> Flag | None:
+        return self.repo.store.get(flag_id)
+
+    def get_flag_value(self, name: str) -> bool | None:
+        """
+        Try to find the `Flag` by `name` and return its `value`.
+        If the `Flag` is not found, raise a `ValueError`.
+        """
+        flag = self.get_flag_by_name(name=name)
+        if not flag:
+            raise ValueError("Flag not found")
+        return flag.value
+
+    def update_flag_by_name(self, name: str, updated_fields: FlagAllowedUpdates) -> Flag:
+        """
+        Try to find the `Flag` by `name` and update it with the provided fields.
+        If the `Flag` is not found, raise a `ValueError`.
+        """
+        existing_flag = self.get_flag_by_name(name=name)
+        if not existing_flag:
+            raise ValueError("Flag not found")
+        return self._update_flag(
+            flag=existing_flag, updated_fields=updated_fields
+        )
+
+    def update_flag_by_id(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:
         """
         Users can `update` existing `Flags` in their `store` by `id`.
         """
@@ -53,11 +84,21 @@ class FlagShipService:
         if not existing_flag:
             raise ValueError("Flag not found")
 
-        for key, value in updated_fields.items():
-            setattr(existing_flag, key, value)
+        return self._update_flag(flag=existing_flag, updated_fields=updated_fields)
 
-        self.repo.save(existing_flag)
-        return existing_flag
+    def _update_flag(self, flag: Flag, updated_fields: FlagAllowedUpdates) -> Flag:
+        """
+        Internal method to update a flag with the provided fields.
+        """
+        for key, value in updated_fields.items():
+            if value is not None:
+                setattr(flag, key, value)
+
+        self.repo.save(flag)
+        return flag
+
+
+
 
     def list(self) -> list[Flag]:
         print(self.repo.store)
