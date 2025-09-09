@@ -14,7 +14,8 @@ class Flag:
     date_created: datetime = field(default_factory=lambda: datetime.now(tz=utc))
     id: UUID = field(default_factory=uuid4)
 
+    @property
     def expired(self) -> bool:
-        if self.expiration_date is None:
-            return False
-        return self.expiration_date >= datetime.now(tz=utc)
+        return bool(
+            self.expiration_date and self.expiration_date <= datetime.now(tz=utc)
+        )

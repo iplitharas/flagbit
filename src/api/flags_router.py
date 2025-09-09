@@ -35,7 +35,7 @@ def get_flag_value(
     flag_name: str, flagship: FlagShipService = Depends(get_flagship_service)
 ) -> bool:
     try:
-        return flagship.get_flag_value(name=flag_name)
+        return flagship.is_enabled(name=flag_name)
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e)) from e
 
