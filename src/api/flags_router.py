@@ -25,6 +25,17 @@ def flags(
     return flagship.get_all_flags(flag_name=flag_name)
 
 
+@flags_router.get("/flags/{flag_name}/value", tags=["Flags"], name="Get flag value",
+                  description="Retrieve the value of a feature flag by name")
+def get_flag_value(
+    flag_name: str, flagship: FlagShipService = Depends(get_flagship_service)
+) -> bool:
+    try:
+        return flagship.get_flag_value(name=flag_name)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+
+
 @flags_router.get(
     "/flags/{flag_id}",
     tags=["Flags"],
