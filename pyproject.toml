@@ -15,6 +15,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "black>=25.1.0",
+    "faker>=37.6.0",
     "hypothesis>=6.138.14",
     "isort>=6.0.1",
     "mutmut>=3.3.1",

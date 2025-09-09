@@ -64,7 +64,9 @@ class FlagShipService:
             raise ValueError("Flag not found")
         return flag.value
 
-    def update_flag_by_name(self, name: str, updated_fields: FlagAllowedUpdates) -> Flag:
+    def update_flag_by_name(
+        self, name: str, updated_fields: FlagAllowedUpdates
+    ) -> Flag:
         """
         Try to find the `Flag` by `name` and update it with the provided fields.
         If the `Flag` is not found, raise a `ValueError`.
@@ -72,11 +74,11 @@ class FlagShipService:
         existing_flag = self.get_flag_by_name(name=name)
         if not existing_flag:
             raise ValueError("Flag not found")
-        return self._update_flag(
-            flag=existing_flag, updated_fields=updated_fields
-        )
+        return self._update_flag(flag=existing_flag, updated_fields=updated_fields)
 
-    def update_flag_by_id(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:
+    def update_flag_by_id(
+        self, flag_id: str, updated_fields: FlagAllowedUpdates
+    ) -> Flag:
         """
         Users can `update` existing `Flags` in their `store` by `id`.
         """
@@ -85,6 +87,15 @@ class FlagShipService:
             raise ValueError("Flag not found")
 
         return self._update_flag(flag=existing_flag, updated_fields=updated_fields)
+
+    def delete_flag_by_id(self, flag_id: str) -> bool:
+        """
+        Users can `delete` existing `Flags` in their `store` by `id`.
+        """
+        if flag_id in self.repo.store:
+            del self.repo.store[flag_id]
+            return True
+        return False
 
     def _update_flag(self, flag: Flag, updated_fields: FlagAllowedUpdates) -> Flag:
         """
@@ -97,9 +108,6 @@ class FlagShipService:
         self.repo.save(flag)
         return flag
 
-
-
-
-    def list(self) -> list[Flag]:
+    def get_all_flags(self) -> list[Flag] | None:
         print(self.repo.store)
-        return list(self.repo.store.values())
+        return [ flag for flag in self.repo.store.values()]

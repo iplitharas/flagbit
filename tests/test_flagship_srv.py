@@ -78,7 +78,9 @@ def test_user_cannot_update_flag_that_does_not_exist():
 
     # When / Then
     with pytest.raises(ValueError, match="Flag not found"):
-        flagship.update_flag_by_name(name="non-existing-flag", updated_fields=updated_fields)
+        flagship.update_flag_by_name(
+            name="non-existing-flag", updated_fields=updated_fields
+        )
 
 
 def test_user_can_see_all_flags():
