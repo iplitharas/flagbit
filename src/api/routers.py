@@ -9,6 +9,7 @@ from fastapi import Depends
 class FlagRequest(BaseModel):
     name: str
     value: bool
+    desc : str | None = None
 
 
 class FlagUpdateRequest(BaseModel):
@@ -70,10 +71,11 @@ def get_flag_by_id(flag_id: str, flagship: FlagShipService = Depends(get_flagshi
     tags=["Flags"],
     name="Create a new flag",
     description="Create a new feature flag",
+    status_code=201,
 )
-def new_flag(flag: FlagRequest) -> bool:
-    flagship.create_flag(name=flag.name, value=flag.value)
-    return True
+def new_flag(flag: FlagRequest, flagship: FlagShipService = Depends(get_flagship_service)) -> Flag:
+    new_flag = flagship.create_flag(name=flag.name, value=flag.value, desc=flag.desc)
+    return new_flag
 
 
 @app.patch(

@@ -93,8 +93,10 @@ def test_user_can_see_all_flags():
     flagship = FlagShipService()
     flagship.create_flag("first flag", value=True)
     flagship.create_flag("second flag", value=False)
+
     # When
-    flags_iter = flagship.list()
+    flags_iter = flagship.get_all_flags()
+
     # Then
     flags = list(flags_iter)
     assert len(flags) == 2, "We should have only two flags"

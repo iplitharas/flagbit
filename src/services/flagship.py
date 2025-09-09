@@ -109,5 +109,4 @@ class FlagShipService:
         return flag
 
     def get_all_flags(self) -> list[Flag] | None:
-        print(self.repo.store)
         return [ flag for flag in self.repo.store.values()]
