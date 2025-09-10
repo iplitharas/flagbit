@@ -2,7 +2,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pytz import utc
 from uuid import uuid4
-from uuid import UUID
 
 
 @dataclass
@@ -12,7 +11,7 @@ class Flag:
     desc: str | None = None
     expiration_date: datetime | None = None
     date_created: datetime = field(default_factory=lambda: datetime.now(tz=utc))
-    id: UUID = field(default_factory=uuid4)
+    id: str = field(default_factory=lambda: str(uuid4()))
 
     @property
     def expired(self) -> bool:

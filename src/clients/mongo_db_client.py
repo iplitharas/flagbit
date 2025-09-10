@@ -6,6 +6,8 @@ from pydantic_settings import BaseSettings
 from loguru import logger
 from contextlib import asynccontextmanager
 
+from pymongo.asynchronous import AsyncCollection
+
 
 class MongoDBConfig(BaseSettings):
     uri: str = "mongodb://root:example@localhost:27017/flagship_db?authSource=admin"
@@ -18,7 +20,11 @@ class MongoDBConfig(BaseSettings):
 
 
 class MongoDBAsyncClient:
-    def __init__(self, config: MongoDBConfig = None, client: AsyncMongoClient = None):
+    def __init__(
+        self,
+        config: MongoDBConfig | None = None,
+        client: AsyncMongoClient | None = None,
+    ):
         self.config = config or MongoDBConfig()
         self._client = client or AsyncMongoClient
 
@@ -33,7 +39,7 @@ class MongoDBAsyncClient:
         finally:
             await self.close()
 
-    async def _ensure_collection_exists(self):
+    async def _ensure_collection_exists(self) -> None:
         if self._client:
             db = self._client[self.config.db]
             existing_collections = await db.list_collection_names()
@@ -62,6 +68,14 @@ class MongoDBAsyncClient:
         if self._client:
             await self._client.close()
             logger.info("MongoDB connection closed")
+
+    def get_flags_collection(self) -> AsyncCollection:
+        if self._client:
+            db = self._client[self.config.db]
+            return db[self.config.collection]
+        else:
+            logger.error("MongoDB client is not connected.")
+            return None
 
 
 async def main():

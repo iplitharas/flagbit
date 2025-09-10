@@ -2,7 +2,6 @@ import pytest
 
 from src.services.flagship import FlagShipService, FlagAllowedUpdates
 from src.exceptions import FlagNotFoundException
-from uuid import UUID
 from datetime import datetime, timedelta
 from pytz import utc
 
@@ -30,7 +29,7 @@ def test_user_can_add_a_new_flag():
     assert expected_flag.value == value, (
         "Store flag value should  be the same as the input"
     )
-    assert isinstance(expected_flag.id, UUID), (
+    assert isinstance(expected_flag.id, str), (
         "Each flash should be associated with one uuid"
     )
 
