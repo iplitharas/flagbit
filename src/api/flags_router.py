@@ -37,7 +37,7 @@ def get_flag_value(
     try:
         return flagship.is_enabled(name=flag_name)
     except Exception as e:
-        raise HTTPException(status_code=404, detail=str(e)) from e
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=str(e)) from e
 
 
 @flags_router.get(
@@ -52,7 +52,7 @@ def get_flag_by_id(
 ) -> Flag:
     if flag := flagship.get_flag(flag_id=flag_id):
         return flag
-    raise HTTPException(status_code=404, detail="Flag not found")
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
 
 
 @flags_router.post(
@@ -65,8 +65,8 @@ def get_flag_by_id(
 def new_flag(
     flag: FlagRequest, flagship: FlagShipService = Depends(get_flagship_service)
 ) -> Flag:
-    new_flag = flagship.create_flag(name=flag.name, value=flag.value, desc=flag.desc)
-    return new_flag
+
+    return flagship.create_flag(name=flag.name, value=flag.value, desc=flag.desc)
 
 
 @flags_router.patch(
@@ -90,7 +90,7 @@ def update_flag(
             ),
         )
     except Exception:
-        raise HTTPException(status_code=404, detail="Flag not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
 
 
 @flags_router.delete(
@@ -104,5 +104,5 @@ def delete_flag(
 ) -> bool:
     success = flagship.delete_flag(flag_id=flag_id)
     if not success:
-        raise ValueError("Flag not found")
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
     return success
