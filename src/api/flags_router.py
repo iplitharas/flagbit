@@ -65,7 +65,6 @@ def get_flag_by_id(
 def new_flag(
     flag: FlagRequest, flagship: FlagShipService = Depends(get_flagship_service)
 ) -> Flag:
-
     return flagship.create_flag(name=flag.name, value=flag.value, desc=flag.desc)
 
 
