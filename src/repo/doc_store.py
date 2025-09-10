@@ -38,7 +38,7 @@ class DocStoreRepo:
         coll = self._client.get_flags_collection()
         await coll.insert_one(flag_to_document(flag=flag))
 
-    async def get_document_by_id(self, _id: str) -> Flag | None:
+    async def get_by_id(self, _id: str) -> Flag | None:
         """
         Retrieve a Flag document by its ID from the MongoDB collection.
         """
@@ -47,7 +47,7 @@ class DocStoreRepo:
             return document_to_flag(doc=document)
         return None
 
-    async def get_document_by_name(self, name: str) -> Flag | None:
+    async def get_by_name(self, name: str) -> Flag | None:
         """
         Retrieve a Flag document by its name from the MongoDB collection.
         """
@@ -56,7 +56,7 @@ class DocStoreRepo:
             return document_to_flag(doc=document)
         return None
 
-    async def get_all_documents(self, limit: int = 100) -> list[Flag]:
+    async def get_all(self, limit: int = 100) -> list[Flag]:
         """
         Retrieve all Flag documents from the MongoDB collection, up to the specified limit.
         """
@@ -65,7 +65,7 @@ class DocStoreRepo:
         flags = [document_to_flag(doc=document) for document in documents]
         return flags
 
-    async def update_document(self, flag: Flag) -> bool:
+    async def update(self, flag: Flag) -> bool:
         """
         Update an existing Flag document in the MongoDB collection.
         """
@@ -75,7 +75,7 @@ class DocStoreRepo:
         )
         return result.modified_count > 0
 
-    async def delete_document_by_id(self, _id: str) -> bool:
+    async def delete(self, _id: str) -> bool:
         """
         Delete a Flag document by its ID from the MongoDB collection.
         """
@@ -96,9 +96,9 @@ if __name__ == "__main__":
         print(flag)
         await repo.store(flag)
         flag.name = "updated_test_flag1"
-        result = await repo.update_document(flag_2)
+        result = await repo.update(flag_2)
         print(result)
-        back = await repo.get_all_documents()
+        back = await repo.get_all()
         print(back)
         await client.close()
 
