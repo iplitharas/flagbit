@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 
-def test_get_all_flags_endpoint(client, fake_flags_fixture):
+def test_user_can_retrieve_all_flags(client, fake_flags_fixture):
     """
     Given some existing `Flags` in the `database/system`
     When I call the `/flags` endpoint,
@@ -21,7 +21,7 @@ def test_get_all_flags_endpoint(client, fake_flags_fixture):
     assert len(data) == 10, "Expected 10 flags in the response"
 
 
-def test_get_flag_by_id_endpoint(client, fake_flags_fixture):
+def test_user_can_retrieve_a_single_flag(client, fake_flags_fixture):
     """
     Given an existing `Flag` in the `database/system`
     When I call the `/flags/{flag_id}` endpoint,
@@ -45,7 +45,7 @@ def test_get_flag_by_id_endpoint(client, fake_flags_fixture):
     assert "desc" in expected_response, "Response should contain flag description"
 
 
-def test_post_new_flag_endpoint(client):
+def test_user_can_create_a_new_flag(client):
     """
     Given a new `Flag` data
     When I call the `/flags` endpoint with a POST request,
@@ -73,3 +73,58 @@ def test_post_new_flag_endpoint(client):
         "Flag description should match"
     )
     assert "id" in expected_response, "Response should contain flag ID"
+
+
+def test_user_can_update_an_existing_flag(client, fake_flags_fixture):
+    """
+    Given an existing `Flag` in the `database/system`
+    When I call the `/flags/{flag_id}` endpoint with a PATCH request,
+    Then I'm expecting the flag to be updated,
+         and the response status code to be `200`
+    """
+    # Given
+    fake_flags_fixture(1)
+    response_all = client.get("/flags")
+    flag = response_all.json()[0]
+    flag_id = flag["id"]
+    updated_data = {
+        "name": "updated_feature",
+        "value": False,
+        "desc": "An updated feature flag for testing",
+    }
+
+    # When
+    response = client.patch(f"/flags/{flag_id}", json=updated_data)
+
+    # Then
+    assert response.status_code == HTTPStatus.OK, "Expected status code 200"
+    expected_response = response.json()
+    assert expected_response["id"] == flag_id, "Flag ID should match"
+    assert expected_response["name"] == updated_data["name"], "Flag name should match"
+    assert expected_response["value"] == updated_data["value"], (
+        "Flag value should match"
+    )
+    assert expected_response["desc"] == updated_data["desc"], (
+        "Flag description should match"
+    )
+
+
+def test_user_cannot_update_a_non_existing_flag(client):
+    """
+    Given a non-existing `Flag` ID
+    When I call the `/flags/{flag_id}` endpoint with a PATCH request,
+    Then I'm expecting a `404` status code
+    """
+    # Given
+    non_existing_flag_id = "non-existing-id"
+    updated_data = {
+        "name": "updated_feature",
+        "value": False,
+        "desc": "An updated feature flag for testing",
+    }
+
+    # When
+    response = client.patch(f"/flags/{non_existing_flag_id}", json=updated_data)
+
+    # Then
+    assert response.status_code == HTTPStatus.NOT_FOUND, "Expected status code 404"

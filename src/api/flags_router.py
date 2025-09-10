@@ -6,7 +6,7 @@ from src.domain.flag import Flag
 from src.services.flagship import FlagShipService, FlagAllowedUpdates
 from fastapi import Depends
 from fastapi import HTTPException
-
+from http import HTTPStatus
 
 flags_router = APIRouter()
 
@@ -74,6 +74,8 @@ def new_flag(
     tags=["Flags"],
     name="Update an existing flag",
     description="Update an existing feature flag",
+    response_model=Flag,
+    status_code=HTTPStatus.OK,
 )
 def update_flag(
     flag_id: str,
