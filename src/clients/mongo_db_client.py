@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings
 from loguru import logger
 from contextlib import asynccontextmanager
 
-from pymongo.asynchronous import AsyncCollection
+from pymongo.asynchronous.collection import AsyncCollection
 
 
 class MongoDBConfig(BaseSettings):
