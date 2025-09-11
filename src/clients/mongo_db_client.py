@@ -1,5 +1,5 @@
 from typing import Any, AsyncGenerator
-
+from datetime import timezone
 from pymongo import AsyncMongoClient
 from pydantic_settings import BaseSettings
 from loguru import logger
@@ -58,7 +58,7 @@ class MongoDBAsyncClient:
         https://pymongo.readthedocs.io/en/stable/faq.html#using-pymongo-with-multiprocessing
         """
         logger.warning("Trying to connect to MongoDB...")
-        self._client = self._client(self.config.uri)  # type: ignore
+        self._client = self._client(self.config.uri, tz_aware=True)  # type: ignore
         await self._client.admin.command("ping")
         logger.success(f"Connected successfully to MongoDB with uri: {self.config.uri}")
         await self._ensure_collection_exists()

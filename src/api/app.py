@@ -5,8 +5,6 @@ from fastapi import FastAPI
 from src.clients.mongo_db_client import MongoDBAsyncClient
 
 
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # type: ignore
     mongo_client = MongoDBAsyncClient()
@@ -18,13 +16,12 @@ async def lifespan(app: FastAPI):  # type: ignore
     # Shutdown: close MongoDB
     await mongo_client.close()
 
+
 app = FastAPI(
     title="Feature Flag API",
     version="1.0.0",
     description="API for managing feature flags",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 app.include_router(flags_router, tags=["Flags"])
-
-

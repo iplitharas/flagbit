@@ -82,5 +82,3 @@ class DocStoreRepo:
         collection = self._client.get_flags_collection()
         result = await collection.delete_one({"_id": _id})
         return result.deleted_count > 0
-
-
