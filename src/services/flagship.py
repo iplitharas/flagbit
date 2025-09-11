@@ -59,14 +59,7 @@ class FlagShipService:
             )
         raise FlagNotFoundException
 
-    # def delete_flag(self, flag_id: str) -> bool:
-    #     """
-    #     Users can `delete` existing `Flags` in their `store` by `id`.
-    #     """
-    #     if flag_id in self.repo.store:
-    #         del self.repo.store[flag_id]
-    #         return True
-    #     return False
+
 
     async def _update_flag(
         self, flag: Flag, updated_fields: FlagAllowedUpdates
@@ -86,3 +79,11 @@ class FlagShipService:
         #     flag = self.repo.get_all(name=flag_name)
         #     return [flag] if flag else []
         return await self.repo.get_all()
+
+
+    async def delete_flag(self, flag_id: str) -> bool:
+        """
+        Users can `delete` existing `Flags` in their `store` by `id`.
+        """
+
+        return await self.repo.delete(_id=flag_id)

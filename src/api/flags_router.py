@@ -92,16 +92,16 @@ async def update_flag(
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
 
 
-# @flags_router.delete(
-#     "/flags/{flag_id}",
-#     tags=["Flags"],
-#     name="Delete a flag",
-#     description="Delete a feature flag by ID",
-# )
-# async def delete_flag(
-#     flag_id: str, flagship: FlagShipService = Depends(get_flagship_service)
-# ) -> bool:
-#     success = await flagship.delete_flag(flag_id=flag_id)
-#     if not success:
-#         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
-#     return success
+@flags_router.delete(
+    "/flags/{flag_id}",
+    tags=["Flags"],
+    name="Delete a flag",
+    description="Delete a feature flag by ID",
+)
+async def delete_flag(
+    flag_id: str, flagship: FlagShipService = Depends(get_flagship_service)
+) -> bool:
+    success = await flagship.delete_flag(flag_id=flag_id)
+    if not success:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
+    return success

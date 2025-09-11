@@ -84,22 +84,3 @@ class DocStoreRepo:
         return result.deleted_count > 0
 
 
-if __name__ == "__main__":
-    import asyncio
-
-    async def main() -> None:
-        client = MongoDBAsyncClient()
-        await client.connect()
-        repo = DocStoreRepo(client)
-        flag = Flag(name="test_flag1", value=True, desc="A test flag")
-        flag_2 = Flag(name="test_flag1", value=True, desc="A test flag")
-        print(flag)
-        await repo.store(flag)
-        flag.name = "updated_test_flag1"
-        result = await repo.update(flag_2)
-        print(result)
-        back = await repo.get_all()
-        print(back)
-        await client.close()
-
-    asyncio.run(main())
