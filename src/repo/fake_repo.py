@@ -2,8 +2,8 @@ from src.domain.flag import Flag
 
 
 class FakeInMemoryRepo:
-    def __init__(self):
-        self.mem_store = {}
+    def __init__(self) -> None:
+        self.mem_store: dict[str, Flag] = {}
 
     async def store(self, flag: Flag) -> None:
         """

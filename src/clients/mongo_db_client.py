@@ -1,7 +1,6 @@
 from typing import Any, AsyncGenerator
 
 from pymongo import AsyncMongoClient
-import asyncio
 from pydantic_settings import BaseSettings
 from loguru import logger
 from contextlib import asynccontextmanager
@@ -23,7 +22,7 @@ class MongoDBAsyncClient:
     def __init__(
         self,
         config: MongoDBConfig | None = None,
-        client: AsyncMongoClient | None = None,
+        client: AsyncMongoClient | None = None,  # type: ignore
     ):
         self.config = config or MongoDBConfig()
         self._client = client or AsyncMongoClient
@@ -31,7 +30,7 @@ class MongoDBAsyncClient:
     @asynccontextmanager
     async def get_client(
         self,
-    ) -> AsyncGenerator[AsyncMongoClient | None | type[AsyncMongoClient], Any]:
+    ) -> AsyncGenerator[AsyncMongoClient | None | type[AsyncMongoClient], Any]:  # type: ignore
         try:
             await self.connect()
             yield self._client
@@ -59,36 +58,22 @@ class MongoDBAsyncClient:
         https://pymongo.readthedocs.io/en/stable/faq.html#using-pymongo-with-multiprocessing
         """
 
-        self._client = self._client(self.config.uri)
+        self._client = self._client(self.config.uri)  # type: ignore
         await self._client.admin.command("ping")
         logger.info(f"Connected successfully to MongoDB with uri: {self.config.uri}")
         await self._ensure_collection_exists()
 
     async def close(self) -> None:
         if self._client:
-            await self._client.close()
+            await self._client.close()  # type: ignore
             logger.info("MongoDB connection closed")
 
-    def get_flags_collection(self) -> AsyncCollection:
+    # @TODO handle this better, we should check if the client is connected before returning the collection
+
+    def get_flags_collection(self) -> AsyncCollection[Any]:
         if self._client:
             db = self._client[self.config.db]
-            return db[self.config.collection]
+            return db[self.config.collection]  # type: ignore
         else:
             logger.error("MongoDB client is not connected.")
-            return None
-
-
-async def main():
-    mongo_db_client = MongoDBAsyncClient()
-    async with mongo_db_client.get_client() as client:
-        if client:
-            db = client[mongo_db_client.config.db]
-            collection = db[mongo_db_client.config.collection]
-            docs = await collection.find().to_list(100)
-            logger.info(f"documents in the database: {docs}")
-        else:
-            logger.error("Failed to get MongoDB client")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+            return None  # type: ignore
