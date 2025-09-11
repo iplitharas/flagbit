@@ -57,10 +57,10 @@ class MongoDBAsyncClient:
         Spawning a subprocess:
         https://pymongo.readthedocs.io/en/stable/faq.html#using-pymongo-with-multiprocessing
         """
-
+        logger.warning("Trying to connect to MongoDB...")
         self._client = self._client(self.config.uri)  # type: ignore
         await self._client.admin.command("ping")
-        logger.info(f"Connected successfully to MongoDB with uri: {self.config.uri}")
+        logger.success(f"Connected successfully to MongoDB with uri: {self.config.uri}")
         await self._ensure_collection_exists()
 
     async def close(self) -> None:

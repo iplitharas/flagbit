@@ -7,11 +7,12 @@ from faker import Faker
 from src.api.dependencies import get_flagship_service
 import pytest
 import pytest_asyncio
+from src.repo.fake_repo import FakeInMemoryRepo
 
 
 @pytest.fixture(scope="module")
 def fake_service() -> FlagShipService:
-    flagship = FlagShipService()
+    flagship = FlagShipService(repo=FakeInMemoryRepo())
     # update this with a fake dependency for testing
     app.dependency_overrides[get_flagship_service] = lambda: flagship
     return flagship

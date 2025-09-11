@@ -4,6 +4,7 @@ from src.services.flagship import FlagShipService, FlagAllowedUpdates
 from src.exceptions import FlagNotFoundException
 from datetime import datetime, timedelta
 from pytz import utc
+from src.repo.fake_repo import FakeInMemoryRepo
 
 
 @pytest.mark.asyncio
@@ -16,7 +17,7 @@ async def test_user_can_add_a_new_flag():
     """
 
     # Given
-    flagship = FlagShipService()
+    flagship = FlagShipService(repo=FakeInMemoryRepo())
     flag_name = "my first flag"
     value = False
 
@@ -53,7 +54,7 @@ async def test_user_can_update_an_existing_flag_by_its_flag_id_and_the_new_field
     Then I'm expecting the `Flag` to be updated with the new value
     """
     # Given
-    flagship = FlagShipService()
+    flagship = FlagShipService(repo=FakeInMemoryRepo())
     existing_flag = await flagship.create_flag("my flag", value=True)
 
     updated_data = {updated_field_name: updated_field_value}
@@ -78,7 +79,7 @@ async def test_user_cannot_update_flag_that_does_not_exist():
     Then I'm expecting a `ValueError` to be raised
     """
     # Given
-    flagship = FlagShipService()
+    flagship = FlagShipService(repo=FakeInMemoryRepo())
     updated_fields = FlagAllowedUpdates(name="new name")
 
     # When / Then
@@ -96,7 +97,7 @@ async def test_user_can_see_all_flags():
     Then I'm expecting an Iterable of flags
     """
     # Given
-    flagship = FlagShipService()
+    flagship = FlagShipService(repo=FakeInMemoryRepo())
     await flagship.create_flag("first flag", value=True)
     await flagship.create_flag("second flag", value=False)
 
@@ -125,7 +126,7 @@ async def test_user_can_get_flag_value_with_is_enabled_method_if_its_not_expired
     Then I'm expecting `True`
     """
     # Given
-    flagship = FlagShipService()
+    flagship = FlagShipService(repo=FakeInMemoryRepo())
     await flagship.create_flag("first flag", value=flag_value)
     # When
     received_value = await flagship.is_enabled("first flag")
@@ -141,7 +142,7 @@ async def test_user_can_see_flag_as_disabled_even_if_value_is_true_but_its_expir
     Then I'm expecting `False`
     """
     # Given
-    flagship = FlagShipService()
+    flagship = FlagShipService(repo=FakeInMemoryRepo())
     flag = await flagship.create_flag("first flag", value=True)
     flag.expiration_date = datetime.now(tz=utc) - timedelta(days=1)
     # When

@@ -3,7 +3,7 @@ from src.helpers import new_expiration_date_from_now
 from src.types import EXP_UNIT_T
 from src.exceptions import FlagNotFoundException
 from typing import TypedDict
-from src.repo.fake_repo import FakeInMemoryRepo
+from src.repo.base import FlagsShipRepo
 
 
 class FlagAllowedUpdates(TypedDict, total=False):
@@ -12,24 +12,9 @@ class FlagAllowedUpdates(TypedDict, total=False):
     desc: str | None
 
 
-class FlagShipRepo:
-    def __init__(self) -> None:
-        self.store: dict[str, Flag] = {}
-
-    def save(self, flag: Flag) -> Flag:
-        self.store[str(flag.id)] = flag
-        return flag
-
-    def get_flag_by_name(self, name: str) -> Flag | None:
-        for flag in self.store.values():
-            if flag.name == name:
-                return flag
-        return None
-
-
 class FlagShipService:
-    def __init__(self, repo: FakeInMemoryRepo | None = None) -> None:
-        self.repo = repo or FakeInMemoryRepo()
+    def __init__(self, repo: FlagsShipRepo) -> None:
+        self.repo = repo
 
     async def create_flag(
         self,
