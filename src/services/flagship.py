@@ -50,7 +50,7 @@ class FlagShipService:
         return new_flag
 
     async def get_flag(self, flag_id: str) -> Flag | None:
-        return await self.repo.store.get(flag_id)
+        return await self.repo.get_by_id(_id=flag_id)
 
     async def is_enabled(self, name: str) -> bool:
         """

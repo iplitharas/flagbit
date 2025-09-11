@@ -18,11 +18,11 @@ flags_router = APIRouter()
     response_model=list[Flag] | None,
     description="Retrieve all feature flags",
 )
-def flags(
+async def flags(
     flagship: FlagShipService = Depends(get_flagship_service),
     flag_name: str | None = None,
 ) -> list[Flag] | None:
-    return flagship.get_all_flags(flag_name=flag_name)
+    return await flagship.get_all_flags(flag_name=flag_name)
 
 
 @flags_router.get(
@@ -31,11 +31,11 @@ def flags(
     name="Get flag value",
     description="Retrieve the value of a feature flag by name",
 )
-def get_flag_value(
+async def get_flag_value(
     flag_name: str, flagship: FlagShipService = Depends(get_flagship_service)
 ) -> bool:
     try:
-        return flagship.is_enabled(name=flag_name)
+        return await flagship.is_enabled(name=flag_name)
     except Exception as e:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=str(e)) from e
 
@@ -47,10 +47,10 @@ def get_flag_value(
     name="Get a flag",
     description="Retrieve a feature flag by ID",
 )
-def get_flag_by_id(
+async def get_flag_by_id(
     flag_id: str, flagship: FlagShipService = Depends(get_flagship_service)
 ) -> Flag:
-    if flag := flagship.get_flag(flag_id=flag_id):
+    if flag := await flagship.get_flag(flag_id=flag_id):
         return flag
     raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
 
@@ -62,10 +62,10 @@ def get_flag_by_id(
     description="Create a new feature flag",
     status_code=201,
 )
-def new_flag(
+async def new_flag(
     flag: FlagRequest, flagship: FlagShipService = Depends(get_flagship_service)
 ) -> Flag:
-    return flagship.create_flag(name=flag.name, value=flag.value, desc=flag.desc)
+    return await flagship.create_flag(name=flag.name, value=flag.value, desc=flag.desc)
 
 
 @flags_router.patch(
@@ -76,13 +76,13 @@ def new_flag(
     response_model=Flag,
     status_code=HTTPStatus.OK,
 )
-def update_flag(
+async def update_flag(
     flag_id: str,
     updated_fields: FlagUpdateRequest,
     flagship: FlagShipService = Depends(get_flagship_service),
 ) -> Flag:
     try:
-        return flagship.update_flag(
+        return await flagship.update_flag(
             flag_id=flag_id,
             updated_fields=cast(
                 FlagAllowedUpdates, updated_fields.model_dump(exclude_unset=True)
@@ -98,10 +98,10 @@ def update_flag(
     name="Delete a flag",
     description="Delete a feature flag by ID",
 )
-def delete_flag(
+async def delete_flag(
     flag_id: str, flagship: FlagShipService = Depends(get_flagship_service)
 ) -> bool:
-    success = flagship.delete_flag(flag_id=flag_id)
+    success = await flagship.delete_flag(flag_id=flag_id)
     if not success:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
     return success

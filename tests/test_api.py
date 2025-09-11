@@ -1,7 +1,9 @@
 from http import HTTPStatus
+import pytest
 
 
-def test_user_can_retrieve_all_flags(client, fake_flags_fixture):
+@pytest.mark.asyncio
+async def test_user_can_retrieve_all_flags(client, fake_flags_fixture):
     """
     Given some existing `Flags` in the `database/system`
     When I call the `/flags` endpoint,
@@ -9,7 +11,7 @@ def test_user_can_retrieve_all_flags(client, fake_flags_fixture):
          and the response status code to be `200`
     """
     # Given
-    fake_flags_fixture(10)
+    await fake_flags_fixture(10)
 
     # When
     response = client.get("/flags")
@@ -21,7 +23,8 @@ def test_user_can_retrieve_all_flags(client, fake_flags_fixture):
     assert len(data) == 10, "Expected 10 flags in the response"
 
 
-def test_user_can_retrieve_a_single_flag(client, fake_flags_fixture):
+@pytest.mark.asyncio
+async def test_user_can_retrieve_a_single_flag(client, fake_flags_fixture):
     """
     Given an existing `Flag` in the `database/system`
     When I call the `/flags/{flag_id}` endpoint,
@@ -29,7 +32,7 @@ def test_user_can_retrieve_a_single_flag(client, fake_flags_fixture):
          and the response status code to be `200`
     """
     # Given
-    fake_flags_fixture(1)
+    await fake_flags_fixture(1)
     response_all = client.get("/flags")
     flag_id = response_all.json()[0]["id"]
 
@@ -75,7 +78,8 @@ def test_user_can_create_a_new_flag(client):
     assert "id" in expected_response, "Response should contain flag ID"
 
 
-def test_user_can_update_an_existing_flag(client, fake_flags_fixture):
+@pytest.mark.asyncio
+async def test_user_can_update_an_existing_flag(client, fake_flags_fixture):
     """
     Given an existing `Flag` in the `database/system`
     When I call the `/flags/{flag_id}` endpoint with a PATCH request,
@@ -83,7 +87,7 @@ def test_user_can_update_an_existing_flag(client, fake_flags_fixture):
          and the response status code to be `200`
     """
     # Given
-    fake_flags_fixture(1)
+    await fake_flags_fixture(1)
     response_all = client.get("/flags")
     flag = response_all.json()[0]
     flag_id = flag["id"]
@@ -109,6 +113,7 @@ def test_user_can_update_an_existing_flag(client, fake_flags_fixture):
     )
 
 
+@pytest.mark.asyncio
 def test_user_cannot_update_a_non_existing_flag(client):
     """
     Given a non-existing `Flag` ID

@@ -1,28 +1,27 @@
 from src.domain.flag import Flag
-from asyncio import Future
 
 
 class FakeInMemoryRepo:
     def __init__(self):
-        self.store = {}
+        self.mem_store = {}
 
     async def store(self, flag: Flag) -> None:
         """
         Store a new Flag in the repository.
         """
-        self.store[flag.id] = flag
+        self.mem_store[flag.id] = flag
 
     async def get_by_id(self, _id: str) -> Flag | None:
         """
         Retrieve a Flag by its ID from the repository.
         """
-        return self.store.get(_id)
+        return self.mem_store.get(_id)
 
     async def get_by_name(self, name: str) -> Flag | None:
         """
         Retrieve a Flag by its name from the repository.
         """
-        for flag in self.store.values():
+        for flag in self.mem_store.values():
             if flag.name == name:
                 return flag
         return None
@@ -31,14 +30,14 @@ class FakeInMemoryRepo:
         """
         Retrieve all Flags from the repository, up to the specified limit.
         """
-        return list(self.store.values())[:limit]
+        return list(self.mem_store.values())[:limit]
 
     async def update(self, flag: Flag) -> bool:
         """
         Update an existing Flag in the repository.
         """
-        if flag.id in self.store:
-            self.store[flag.id] = flag
+        if flag.id in self.mem_store:
+            self.mem_store[flag.id] = flag
             return True
         return False
 
@@ -46,7 +45,7 @@ class FakeInMemoryRepo:
         """
         Delete a Flag by its ID from the repository.
         """
-        if _id in self.store:
-            del self.store[_id]
+        if _id in self.mem_store:
+            del self.mem_store[_id]
             return True
         return False
