@@ -16,6 +16,4 @@ class Flag:
 
     @property
     def expired(self) -> bool:
-        return bool(
-            self.expiration_date and self.expiration_date <= datetime.now(tz=utc)
-        )
+        return bool(self.expiration_date and self.expiration_date <= datetime.now(tz=utc))

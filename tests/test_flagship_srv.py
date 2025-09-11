@@ -26,15 +26,9 @@ async def test_user_can_add_a_new_flag():
     expected_flag = await flagship.create_flag(name=flag_name, value=value)
 
     # Then
-    assert expected_flag.name == flag_name, (
-        "Store flag name should be the same as the input"
-    )
-    assert expected_flag.value == value, (
-        "Store flag value should  be the same as the input"
-    )
-    assert isinstance(expected_flag.id, str), (
-        "Each flash should be associated with one uuid"
-    )
+    assert expected_flag.name == flag_name, "Store flag name should be the same as the input"
+    assert expected_flag.value == value, "Store flag value should  be the same as the input"
+    assert isinstance(expected_flag.id, str), "Each flash should be associated with one uuid"
 
 
 @pytest.mark.asyncio
@@ -85,9 +79,7 @@ async def test_user_cannot_update_flag_that_does_not_exist():
 
     # When / Then
     with pytest.raises(FlagNotFoundException):
-        await flagship.update_flag(
-            flag_id="non-existing-flag-id", updated_fields=updated_fields
-        )
+        await flagship.update_flag(flag_id="non-existing-flag-id", updated_fields=updated_fields)
 
 
 @pytest.mark.asyncio

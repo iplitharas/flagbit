@@ -9,6 +9,6 @@ def get_doc_store_repo(request: Request) -> DocStoreRepo:
 
 
 def get_flagship_service(
-    repo: DocStoreRepo = Depends(get_doc_store_repo),
+    repo: DocStoreRepo = Depends(get_doc_store_repo),  # noqa: B008
 ) -> FlagShipService:
     return FlagShipService(repo=repo)

@@ -36,3 +36,42 @@ dev = [
 python_version = "3.12"
 strict = true
 warn_return_any = true
+
+
+[tool.ruff]
+# Target Python version
+target-version = "py312"
+
+
+lint.select = [
+  "E",   # pycodestyle (errors)
+  "F",   # pyflakes
+  "I",   # isort (import sorting)
+  "UP",  # pyupgrade (modernize syntax for 3.12)
+  "B",   # flake8-bugbear (common bugs/pitfalls)
+  "SIM", # flake8-simplify
+  "C4",  # flake8-comprehensions
+]
+
+lint.ignore = [
+  "E501",  # line length (let formatter handle wrapping)
+]
+
+# Maximum line length (matches Black’s default)
+line-length = 100
+
+exclude = [
+  ".git",
+  ".mypy_cache",
+  ".ruff_cache",
+  "__pycache__",
+  "build",
+  "dist",
+]
+
+[tool.ruff.format]
+quote-style = "double"          # normalize to double quotes
+indent-style = "space"          # enforce spaces
+line-ending = "lf"              # consistent LF endings
+skip-magic-trailing-comma = false
+docstring-code-format = true    # format code inside docstrings

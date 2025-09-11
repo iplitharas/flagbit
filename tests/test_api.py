@@ -70,12 +70,8 @@ def test_user_can_create_a_new_flag(client):
     assert response.status_code == HTTPStatus.CREATED, "Expected status code 201"
     expected_response = response.json()
     assert expected_response["name"] == new_flag_data["name"], "Flag name should match"
-    assert expected_response["value"] == new_flag_data["value"], (
-        "Flag value should match"
-    )
-    assert expected_response["desc"] == new_flag_data["desc"], (
-        "Flag description should match"
-    )
+    assert expected_response["value"] == new_flag_data["value"], "Flag value should match"
+    assert expected_response["desc"] == new_flag_data["desc"], "Flag description should match"
     assert "id" in expected_response, "Response should contain flag ID"
 
 
@@ -106,12 +102,8 @@ async def test_user_can_update_an_existing_flag(client, fake_flags_fixture):
     expected_response = response.json()
     assert expected_response["id"] == flag_id, "Flag ID should match"
     assert expected_response["name"] == updated_data["name"], "Flag name should match"
-    assert expected_response["value"] == updated_data["value"], (
-        "Flag value should match"
-    )
-    assert expected_response["desc"] == updated_data["desc"], (
-        "Flag description should match"
-    )
+    assert expected_response["value"] == updated_data["value"], "Flag value should match"
+    assert expected_response["desc"] == updated_data["desc"], "Flag description should match"
 
 
 @pytest.mark.asyncio

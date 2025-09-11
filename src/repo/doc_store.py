@@ -3,12 +3,12 @@ Implements a document storage repo for MongoDB.
 """
 
 from dataclasses import asdict
-from typing import Any, TypeAlias
+from typing import Any
 
 from src.clients.mongo_db_client import MongoDBAsyncClient
 from src.domain.flag import Flag
 
-MongoDBDocument: TypeAlias = dict[str, Any]
+type MongoDBDocument = dict[str, Any]
 
 
 def flag_to_document(flag: Flag) -> MongoDBDocument:
@@ -70,9 +70,7 @@ class DocStoreRepo:
         Update an existing Flag document in the MongoDB collection.
         """
         collection = self._client.get_flags_collection()
-        result = await collection.replace_one(
-            {"_id": str(flag.id)}, flag_to_document(flag)
-        )
+        result = await collection.replace_one({"_id": str(flag.id)}, flag_to_document(flag))
         return result.modified_count > 0
 
     async def delete(self, _id: str) -> bool:

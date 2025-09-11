@@ -29,9 +29,7 @@ class FlagShipService:
         Create a new `Flag` with the provided `name`, `value`, `desc`, `exp_unit` and `exp_value`.
         """
         expiration_date = new_expiration_date_from_now(unit=exp_unit, value=exp_value)
-        new_flag = Flag(
-            name=name, value=value, desc=desc, expiration_date=expiration_date
-        )
+        new_flag = Flag(name=name, value=value, desc=desc, expiration_date=expiration_date)
         await self.repo.store(flag=new_flag)
         return new_flag
 
@@ -48,21 +46,15 @@ class FlagShipService:
             raise FlagNotFoundException
         return False if flag.expired else flag.value
 
-    async def update_flag(
-        self, flag_id: str, updated_fields: FlagAllowedUpdates
-    ) -> Flag:
+    async def update_flag(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:
         """
         Users can `update` existing `Flags` in their `store` by `id`.
         """
         if existing_flag := await self.repo.get_by_id(_id=flag_id):
-            return await self._update_flag(
-                flag=existing_flag, updated_fields=updated_fields
-            )
+            return await self._update_flag(flag=existing_flag, updated_fields=updated_fields)
         raise FlagNotFoundException
 
-    async def _update_flag(
-        self, flag: Flag, updated_fields: FlagAllowedUpdates
-    ) -> Flag:
+    async def _update_flag(self, flag: Flag, updated_fields: FlagAllowedUpdates) -> Flag:
         """
         Internal method to update a flag with the provided fields.
         """
