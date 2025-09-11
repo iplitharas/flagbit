@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from pytz import utc
 from uuid import uuid4
+
+from pytz import utc
 
 
 @dataclass

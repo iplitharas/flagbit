@@ -1,12 +1,12 @@
-from fastapi import APIRouter
-from typing import cast
-from src.api.dependencies import get_flagship_service
-from src.api.models import FlagUpdateRequest, FlagRequest
-from src.domain.flag import Flag
-from src.services.flagship import FlagShipService, FlagAllowedUpdates
-from fastapi import Depends
-from fastapi import HTTPException
 from http import HTTPStatus
+from typing import cast
+
+from fastapi import APIRouter, Depends, HTTPException
+
+from src.api.dependencies import get_flagship_service
+from src.api.models import FlagRequest, FlagUpdateRequest
+from src.domain.flag import Flag
+from src.services.flagship import FlagAllowedUpdates, FlagShipService
 
 flags_router = APIRouter()
 

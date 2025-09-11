@@ -1,7 +1,8 @@
 from contextlib import asynccontextmanager
 
-from src.api.flags_router import flags_router
 from fastapi import FastAPI
+
+from src.api.flags_router import flags_router
 from src.clients.mongo_db_client import MongoDBAsyncClient
 
 

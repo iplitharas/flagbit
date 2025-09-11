@@ -1,13 +1,14 @@
-from fastapi.testclient import TestClient
-from src.services.flagship import FlagShipService
-from src.api.app import app
-
 from typing import Callable
-from faker import Faker
-from src.api.dependencies import get_flagship_service
+
 import pytest
 import pytest_asyncio
+from faker import Faker
+from fastapi.testclient import TestClient
+
+from src.api.app import app
+from src.api.dependencies import get_flagship_service
 from src.repo.fake_repo import FakeInMemoryRepo
+from src.services.flagship import FlagShipService
 
 
 @pytest.fixture(scope="module")

@@ -1,10 +1,9 @@
-from typing import Any, AsyncGenerator
-from datetime import timezone
-from pymongo import AsyncMongoClient
-from pydantic_settings import BaseSettings
-from loguru import logger
 from contextlib import asynccontextmanager
+from typing import Any, AsyncGenerator
 
+from loguru import logger
+from pydantic_settings import BaseSettings
+from pymongo import AsyncMongoClient
 from pymongo.asynchronous.collection import AsyncCollection
 
 

@@ -2,11 +2,11 @@
 Implements a document storage repo for MongoDB.
 """
 
+from dataclasses import asdict
+from typing import Any, TypeAlias
+
 from src.clients.mongo_db_client import MongoDBAsyncClient
 from src.domain.flag import Flag
-from dataclasses import asdict
-from typing import Any
-from typing import TypeAlias
 
 MongoDBDocument: TypeAlias = dict[str, Any]
 

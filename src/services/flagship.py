@@ -1,9 +1,10 @@
-from src.domain.flag import Flag
-from src.helpers import new_expiration_date_from_now
-from src.types import EXP_UNIT_T
-from src.exceptions import FlagNotFoundException
 from typing import TypedDict
+
+from src.domain.flag import Flag
+from src.exceptions import FlagNotFoundException
+from src.helpers import new_expiration_date_from_now
 from src.repo.base import FlagsShipRepo
+from src.types import EXP_UNIT_T
 
 
 class FlagAllowedUpdates(TypedDict, total=False):

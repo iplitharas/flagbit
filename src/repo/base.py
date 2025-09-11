@@ -1,5 +1,6 @@
-from src.domain.flag import Flag
 from typing import Protocol
+
+from src.domain.flag import Flag
 
 
 class FlagsShipRepo(Protocol):

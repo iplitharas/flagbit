@@ -1,10 +1,11 @@
-import pytest
-
-from src.services.flagship import FlagShipService, FlagAllowedUpdates
-from src.exceptions import FlagNotFoundException
 from datetime import datetime, timedelta
+
+import pytest
 from pytz import utc
+
+from src.exceptions import FlagNotFoundException
 from src.repo.fake_repo import FakeInMemoryRepo
+from src.services.flagship import FlagAllowedUpdates, FlagShipService
 
 
 @pytest.mark.asyncio

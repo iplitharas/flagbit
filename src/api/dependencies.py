@@ -1,7 +1,7 @@
 from fastapi import Depends, Request
 
-from src.services.flagship import FlagShipService
 from src.repo.doc_store import DocStoreRepo
+from src.services.flagship import FlagShipService
 
 
 def get_doc_store_repo(request: Request) -> DocStoreRepo:
