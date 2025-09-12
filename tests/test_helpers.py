@@ -49,3 +49,14 @@ def test_new_expiration_date_from_now(time_unit, value, expected_expiration_date
         new_expiration_date(current_datetime=MOCKED_DT_NOW, unit=time_unit, value=value)
         == expected_expiration_date
     )
+
+
+def test_new_expiration_date_raises_value_error_on_invalid_time_unit():
+    """
+    Given an invalid `time unit`
+    When I call the `new_expiration_date` function,
+    Then I expect to get a `ValueError`
+    """
+    with pytest.raises(ValueError) as exc_info:
+        new_expiration_date(current_datetime=MOCKED_DT_NOW, unit="invalid", value=1)
+    assert "Invalid time unit: invalid" in str(exc_info.value)
