@@ -12,7 +12,7 @@ from src.services.flagship import FlagAllowedUpdates, FlagShipService
 async def test_user_can_add_a_new_flag():
     """
     Given a `flag` name and some initial `boolean` value
-    When I call the `create_flag` method from `FlagShipService`
+    When I call the `create_flag` method from `FlagShipService,`
     Then I'm expected a new `Flag` instance to be return
          with the right arguments.
     """

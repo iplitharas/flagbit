@@ -1,17 +1,15 @@
 from datetime import datetime, timedelta
 
-from pytz import utc
-
 from src.types import EXP_UNIT_T
 
 
-def new_expiration_date_from_now(unit: EXP_UNIT_T, value: int) -> datetime:
+def new_expiration_date(current_datetime: datetime, unit: EXP_UNIT_T, value: int) -> datetime:
     match unit:
         case "m":
-            return datetime.now(tz=utc) + timedelta(minutes=value)
+            return current_datetime + timedelta(minutes=value)
         case "h":
-            return datetime.now(tz=utc) + timedelta(hours=value)
+            return current_datetime + timedelta(hours=value)
         case "d":
-            return datetime.now(tz=utc) + timedelta(days=value)
+            return current_datetime + timedelta(days=value)
         case "w":
-            return datetime.now(tz=utc) + timedelta(weeks=value)
+            return current_datetime + timedelta(weeks=value)

@@ -1,8 +1,11 @@
+from datetime import datetime
 from typing import TypedDict
+
+from pytz import utc
 
 from src.domain.flag import Flag
 from src.exceptions import FlagNotFoundException
-from src.helpers import new_expiration_date_from_now
+from src.helpers import new_expiration_date
 from src.repo.base import FlagsShipRepo
 from src.types import EXP_UNIT_T
 
@@ -28,7 +31,9 @@ class FlagShipService:
         """
         Create a new `Flag` with the provided `name`, `value`, `desc`, `exp_unit` and `exp_value`.
         """
-        expiration_date = new_expiration_date_from_now(unit=exp_unit, value=exp_value)
+        expiration_date = new_expiration_date(
+            current_datetime=datetime.now(tz=utc), unit=exp_unit, value=exp_value
+        )
         new_flag = Flag(name=name, value=value, desc=desc, expiration_date=expiration_date)
         await self.repo.store(flag=new_flag)
         return new_flag
