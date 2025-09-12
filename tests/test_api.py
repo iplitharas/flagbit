@@ -107,7 +107,6 @@ async def test_user_can_update_an_existing_flag(client, fake_flags_fixture):
     assert expected_response["desc"] == updated_data["desc"], "Flag description should match"
 
 
-@pytest.mark.asyncio
 def test_user_cannot_update_a_non_existing_flag(client):
     """
     Given a non-existing `Flag` ID
