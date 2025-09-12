@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 
 from src.api.dependencies import get_flagship_service
 from src.api.flags_router import flags_router
+from src.domain.flag import Flag
 from src.repo.fake_repo import FakeInMemoryRepo
 from src.services.flagship import FlagShipService
 
@@ -43,11 +44,15 @@ def override_get_flagship_service(test_app, flagship_with_in_memory_repo):
 
 @pytest_asyncio.fixture
 async def fake_flags_fixture(flagship_with_in_memory_repo) -> Callable:
-    async def __fake_flag_fixture(num_flags: int = 3) -> None:
+    async def __fake_flag_fixture(num_flags: int = 3) -> list[Flag]:
         fake = Faker()
+        flags = []
         for _ in range(num_flags):
-            await flagship_with_in_memory_repo.create_flag(
-                name=fake.name(), value=fake.boolean(), desc=fake.sentence()
+            flags.append(
+                await flagship_with_in_memory_repo.create_flag(
+                    name=fake.name(), value=fake.boolean(), desc=fake.sentence()
+                )
             )
+        return flags
 
     return __fake_flag_fixture

@@ -126,3 +126,43 @@ def test_user_cannot_update_a_non_existing_flag(client):
 
     # Then
     assert response.status_code == HTTPStatus.NOT_FOUND, "Expected status code 404"
+
+
+@pytest.mark.asyncio
+async def test_user_can_delete_an_existing_flag(client, fake_flags_fixture):
+    """
+    Given an existing `Flag` in the `database/system`
+    When I call the `/flags/{flag_id}` endpoint with a DELETE request,
+    Then I'm expecting the flag to be deleted,
+         and the response status code to be `204`
+    """
+    # Given
+    flags = await fake_flags_fixture(1)
+    flag_id = flags[0].id
+    # When
+    response = client.delete(f"/flags/{flag_id}")
+
+    # Then
+    assert response.status_code == HTTPStatus.NO_CONTENT, "Expected status code 204"
+
+    # Verify deletion
+    get_response = client.get(f"/flags/{flag_id}")
+    assert get_response.status_code == HTTPStatus.NOT_FOUND, (
+        "Expected status code 404 after deletion"
+    )
+
+
+def test_user_cannot_delete_a_non_existing_flag(client):
+    """
+    Given a non-existing `Flag` ID
+    When I call the `/flags/{flag_id}` endpoint with a DELETE request,
+    Then I'm expecting a `404` status code
+    """
+    # Given
+    non_existing_flag_id = "non-existing-id"
+
+    # When
+    response = client.delete(f"/flags/{non_existing_flag_id}")
+
+    # Then
+    assert response.status_code == HTTPStatus.NOT_FOUND, "Expected status code 404"

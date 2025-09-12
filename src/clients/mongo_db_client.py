@@ -6,6 +6,7 @@ from loguru import logger
 from pydantic_settings import BaseSettings
 from pymongo import AsyncMongoClient
 from pymongo.asynchronous.collection import AsyncCollection
+from pymongo.errors import ServerSelectionTimeoutError
 
 
 class MongoDBConfig(BaseSettings):
@@ -38,17 +39,14 @@ class MongoDBAsyncClient:
         finally:
             await self.close()
 
-    async def _ensure_collection_exists(self) -> None:
-        if self._client:
-            db = self._client[self.config.db]
-            existing_collections = await db.list_collection_names()
-            if self.config.collection not in existing_collections:
-                await db.create_collection(self.config.collection)
-                logger.info(f"Collection '{self.config.collection}' created.")
-            else:
-                logger.info(f"Collection '{self.config.collection}' already exists.")
+    async def _collection_check(self) -> None:
+        db = self._client[self.config.db]
+        existing_collections = await db.list_collection_names()
+        if self.config.collection not in existing_collections:
+            await db.create_collection(self.config.collection)
+            logger.info(f"Collection '{self.config.collection}' created.")
         else:
-            logger.error("MongoDB client is not connected.")
+            logger.info(f"Collection '{self.config.collection}' already exists.")
 
     async def connect(self) -> None:
         """
@@ -58,10 +56,16 @@ class MongoDBAsyncClient:
         https://pymongo.readthedocs.io/en/stable/faq.html#using-pymongo-with-multiprocessing
         """
         logger.warning("Trying to connect to MongoDB...")
-        self._client = self._client(self.config.uri, tz_aware=True)  # type: ignore
-        await self._client.admin.command("ping")
-        logger.success(f"Connected successfully to MongoDB with uri: {self.config.uri}")
-        await self._ensure_collection_exists()
+        try:
+            self._client = self._client(self.config.uri, tz_aware=True)  # type: ignore
+            await self._client.admin.command("ping")
+            logger.success(f"Connected successfully to MongoDB with uri: {self.config.uri}")
+        except ServerSelectionTimeoutError as error:
+            logger.error(f"Could not connect to MongoDB: {error}")
+            self._client = None  # type: ignore
+            raise ConnectionError("Failed to connect to MongoDB") from None
+
+        await self._collection_check()
 
     async def close(self) -> None:
         if self._client:

@@ -98,12 +98,12 @@ async def update_flag(
     tags=["Flags"],
     name="Delete a flag",
     description="Delete a feature flag by ID",
+    status_code=HTTPStatus.NO_CONTENT,
 )
 async def delete_flag(
     flag_id: str,
     flagship: FlagShipService = Depends(get_flagship_service),  # noqa: B008
-) -> bool:
+) -> None:
     success = await flagship.delete_flag(flag_id=flag_id)
     if not success:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
-    return success
