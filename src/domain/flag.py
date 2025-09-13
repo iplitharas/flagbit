@@ -12,6 +12,8 @@ class Flag:
     desc: str | None = None
     expiration_date: datetime | None = None
     date_created: datetime = field(default_factory=lambda: datetime.now(tz=utc))
+    date_updated: datetime = field(default_factory=lambda: datetime.now(tz=utc))
+
     id: str = field(default_factory=lambda: str(uuid4()))
 
     @property
