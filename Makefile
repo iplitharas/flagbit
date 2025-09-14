@@ -33,7 +33,7 @@ down: ## Stop containers 🐳
 
 
 app-start: ## Start the FastAPI app 🚀
-	uv run uvicorn src.api.app:app --reload
+	uv run uvicorn src.api.app:app  --reload
 
 .PHONY: help  install-hooks setup-local-env test test-cov \
  		 check clean-hooks clean up down
