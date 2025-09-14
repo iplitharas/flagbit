@@ -1,14 +1,12 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 from src.api.flags_router import flags_router
 from src.clients.mongo_db_client import MongoDBAsyncClient
-
-from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
 
 
 @asynccontextmanager
@@ -45,5 +43,5 @@ templates = Jinja2Templates(directory="src/api/templates")
 
 
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
+async def home(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("home.html", {"request": request})

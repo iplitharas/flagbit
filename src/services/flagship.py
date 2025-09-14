@@ -66,7 +66,7 @@ class FlagShipService:
         for key, value in updated_fields.items():
             if value is not None:
                 setattr(flag, key, value)
-        flag.date_updated = str(datetime.now(tz=utc))
+        flag.date_updated = datetime.now(tz=utc)
         await self.repo.update(flag)
         return flag
 
