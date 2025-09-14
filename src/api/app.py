@@ -5,6 +5,11 @@ from fastapi import FastAPI
 from src.api.flags_router import flags_router
 from src.clients.mongo_db_client import MongoDBAsyncClient
 
+from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # type: ignore
@@ -26,3 +31,19 @@ app = FastAPI(
 )
 
 app.include_router(flags_router, tags=["Flags"])
+
+# Enable CORS for frontend requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or specify your frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+templates = Jinja2Templates(directory="src/api/templates")
+
+
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})

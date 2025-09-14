@@ -25,8 +25,18 @@ clean:  ## Clean temp dirs 🧹
 clean-hooks: ## Clean hooks 🧹
 	uv run pre-commit clean
 
+up: ## Start containers 🐳
+	docker compose up -d
+
+down: ## Stop containers 🐳
+	docker compose down
+
+
+app-start: ## Start the FastAPI app 🚀
+	uv run uvicorn src.api.app:app --reload
+
 .PHONY: help  install-hooks setup-local-env test test-cov \
- 		 check clean-hooks clean
+ 		 check clean-hooks clean up down
 
 help:
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
