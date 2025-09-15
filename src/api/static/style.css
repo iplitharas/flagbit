@@ -150,7 +150,7 @@
   }
   .retro-switch.on { color: #4ecdc4; text-shadow: 0 0 4px #4ecdc4; }
   .retro-switch.off { color: #888; text-shadow: 0 0 2px #ff6f61; }
-.form-select, .form-select option {
+.form-select, .form-label, .form-select option {
   font-family: 'VT323', 'Courier New', Courier, monospace;
   font-size: 1.2rem;
   background: #fffbe6;

@@ -184,28 +184,30 @@
       }
 
       const cardCol = document.createElement('div');
-      cardCol.className = 'col-md-4';
-
       cardCol.innerHTML = `
-        <div class="card flag-card ${flag.value ? 'flag-on' : 'flag-off'}">
-          <div class="card-body">
-            <div class="flag-header d-flex align-items-center justify-content-between">
-              <h5 class="card-title mb-0">${escapeHtml(flag.name)}</h5>
-             <span class="retro-switch ${flag.value ? 'on' : 'off'}" title="Toggle flag">
-  <i class="bi ${flag.value ? 'bi-toggle-on' : 'bi-toggle-off'}"></i>
-</span>
-            </div>
-            <p class="card-text mt-2">${escapeHtml(flag.desc)}</p>
-            <p><strong>Status:</strong> ${flag.value ? 'ON' : 'OFF'}</p>
-            <p class="text-muted mb-1">Created: ${flag.date_created ? formatDateDDMMYYYY(flag.date_created) : ''}</p>
-            <p class="text-muted mb-1">Updated: ${flag.date_updated ? formatDateDDMMYYYY(flag.date_updated) : ''}</p>
-            <p class="text-muted mb-1">Expiry: ${flag.expiration_date ? formatDateDDMMYYYY(flag.expiration_date) : ''} ${expireBadgeHTML}</p>
-            <div class="flag-footer">
-              <button class="btn btn-sm btn-warning update-btn"><i class="bi bi-pencil-square"></i></button>
-              <button class="btn btn-sm btn-outline-danger delete-btn"><i class="bi bi-trash"></i></button>
-            </div>
-          </div>
-        </div>`;
+  <div class="card flag-card ${flag.value ? 'flag-on' : 'flag-off'}">
+    <div class="card-body">
+      <div class="flag-header d-flex align-items-center justify-content-between">
+        <h5 class="card-title mb-0">${escapeHtml(flag.name)}</h5>
+        <span class="retro-switch ${flag.value ? 'on' : 'off'}" title="Toggle flag">
+          <i class="bi ${flag.value ? 'bi-toggle-on' : 'bi-toggle-off'}"></i>
+        </span>
+      </div>
+      <p class="card-text mt-2">${escapeHtml(flag.desc)}</p>
+      <p><strong>Status:</strong> ${flag.value ? 'ON' : 'OFF'}</p>
+      <p class="text-muted mb-1">Created: ${flag.date_created ? formatDateDDMMYYYY(flag.date_created) : ''}</p>
+      <p class="text-muted mb-1">Updated: ${flag.date_updated ? formatDateDDMMYYYY(flag.date_updated) : ''}</p>
+      <p class="text-muted mb-1">Expiry: ${flag.expiration_date ? formatDateDDMMYYYY(flag.expiration_date) : ''}</p>
+      <div class="flag-footer d-flex align-items-center">
+      ${expireBadgeHTML}
+        <button class="btn btn-sm btn-warning update-btn"><i class="bi bi-pencil-square"></i></button>
+        <button class="btn btn-sm btn-outline-danger delete-btn"><i class="bi bi-trash"></i></button>
+        
+      </div>
+    </div>
+  </div>`;
+
+      cardCol.className = 'col-md-4';
 
       flagsContainer.appendChild(cardCol);
 

@@ -4,13 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Flagship Dashboard</title>
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
 </head>
+
+
+
+
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
@@ -51,7 +54,7 @@
             </div>
             <div class="col-md-2">
               <input type="date" id="flagExpiry" class="form-control">
-              <div class="muted-small">Optional</div>
+              <div class="muted-small">Expiration date </div>
             </div>
             <div class="col-md-2">
               <button type="submit" class="btn btn-primary w-100">Create</button>
@@ -62,6 +65,9 @@
     </div>
   </div>
 
+    <!-- ############################################################################################################-->
+    <!-- ############################################## Search and Filters  #########################################-->
+    <!-- ############################################################################################################-->
   <!-- Search and Filters -->
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div class="input-group search-bar">
@@ -78,16 +84,25 @@
     </div>
   </div>
 
-  <!-- Flags List -->
+
+    <!-- ############################################################################################################-->
+    <!-- ############################################## Flags List ##################################################-->
+    <!-- ############################################################################################################-->
   <div id="flagsContainer" class="row g-3"></div>
 </div>
 
-<!-- Toast Container -->
+
+<!-- ############################################################################################################-->
+<!-- ############################################## Toast Container  #############################################-->
+<!-- ############################################################################################################-->
+
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055">
   <div id="toastContainer"></div>
 </div>
 
-<!-- Update Modal -->
+<!-- ############################################################################################################-->
+<!-- ############################################## Update Container  ##########################################-->
+<!-- ############################################################################################################-->
 <div class="modal fade" id="updateModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
