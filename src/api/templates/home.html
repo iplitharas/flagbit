@@ -7,8 +7,6 @@
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
   <style>
@@ -111,7 +109,7 @@
       <form id="updateFlagForm">
         <div class="modal-header">
           <h5 class="modal-title">Update Flag</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"> </button>
         </div>
         <div class="modal-body">
           <input type="hidden" id="updateId">
@@ -176,7 +174,6 @@
     return `${dd}/${mm}/${yyyy}`;
   }
 
-  // FETCH HELPERS (talk to your API)
   async function fetchFlags() {
     try {
       const res = await fetch('/flags', { method: 'GET', headers: { 'Accept': 'application/json' }, credentials: 'same-origin' });
@@ -294,10 +291,11 @@
     }
   }
 
-  // RENDER
+  // RENDERING all flags based on current filters
+
   function renderFlags() {
-    const container = document.getElementById('flagsContainer');
-    container.innerHTML = '';
+    const flagsContainer = document.getElementById('flagsContainer');
+    flagsContainer.innerHTML = '';
     const now = new Date();
     const filterName = (document.getElementById('filterName').value || '').toLowerCase();
     const filterValue = document.getElementById('filterValue').value;
@@ -343,29 +341,29 @@
       cardCol.className = 'col-md-4';
 
       cardCol.innerHTML = `
-        <div class="card flag-card ${flag.value ? 'flag-on' : 'flag-off'}">
+        <div class="card flag-card ${ flag.value ? 'flag-on' : 'flag-off'}">
           <div class="card-body">
             <div class="flag-header">
-              <h5 class="card-title mb-0">${escapeHtml(flag.name || '')}</h5>
+              <h5 class="card-title mb-0">${escapeHtml(flag.name)}</h5>
               <div class="form-check form-switch">
                 <input class="form-check-input toggle-switch" type="checkbox" ${flag.value ? 'checked' : ''} ${isExpired ? 'disabled' : ''}>
               </div>
             </div>
 
-            <p class="card-text mt-2">${escapeHtml(flag.desc || '')}</p>
+            <p class="card-text mt-2">${escapeHtml(flag.desc)}</p>
             <p><strong>Status:</strong> ${flag.value ? 'ON' : 'OFF'}</p>
             <p class="text-muted mb-1">Created: ${flag.date_created ? formatDateDDMMYYYY(flag.date_created) : ''}</p>
             <p class="text-muted mb-1">Updated: ${flag.date_updated ? formatDateDDMMYYYY(flag.date_updated) : ''}</p>
-            <p class="mb-2">Expiry: ${escapeHtml(expiryText)} ${expireBadgeHTML}</p>
+            <p class="text-muted mb-1">Expiry:  ${flag.expiration_date ? formatDateDDMMYYYY(flag.expiration_date) : ''} ${expireBadgeHTML}</p>
 
             <div class="flag-footer">
-              <button class="btn btn-sm btn-warning update-btn">Update</button>
-              <button class="btn btn-sm btn-outline-danger delete-btn">Delete</button>
+              <button class="btn btn-sm btn-warning update-btn"><i class="bi bi-pencil-square"></i></button>
+              <button class="btn btn-sm btn-outline-danger delete-btn"><i class="bi bi-trash"></i></button>
             </div>
           </div>
         </div>`;
 
-      container.appendChild(cardCol);
+      flagsContainer.appendChild(cardCol);
 
       // Attach handlers
       const toggleEl = cardCol.querySelector('.toggle-switch');
@@ -396,7 +394,7 @@
 
     // If no results:
     if (visible.length === 0) {
-      container.innerHTML = '<div class="col-12"><div class="alert alert-secondary">No flags found.</div></div>';
+      flagsContainer.innerHTML = '<div class="col-12"><div class="alert alert-secondary">No flags found.</div></div>';
     }
   }
 
