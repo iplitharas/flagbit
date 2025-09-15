@@ -1,0 +1,159 @@
+  body {
+    background: repeating-linear-gradient(
+      135deg,
+      #f7f1e3 0px,
+      #f7f1e3 40px,
+      #e2d7c3 40px,
+      #e2d7c3 80px
+    );
+    font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
+    color: #222;
+  }
+  .navbar {
+    background: #2d2d2d !important;
+    border-bottom: 4px solid #ffb347;
+    box-shadow: 0 4px 0 #222;
+  }
+  .navbar-brand {
+    font-family: 'Press Start 2P', monospace;
+    color: #ffb347 !important;
+    letter-spacing: 2px;
+    font-size: 1.3rem;
+  }
+  .card.flag-card {
+    background: #fffbe6;
+    border: 3px solid #222;
+    border-radius: 0;
+    box-shadow: 4px 4px 0 #ffb347, 0 0 0 #222;
+    font-family: 'Press Start 2P', monospace;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card.flag-card:hover {
+    box-shadow: 8px 8px 0 #ffb347, 0 0 0 #222;
+    transform: scale(1.03);
+  }
+  .flag-on { border-left: 8px solid #4ecdc4; }
+  .flag-off { border-left: 8px solid #ff6f61; }
+  .flag-header h5 {
+    font-size: 1rem;
+    color: #222;
+    text-shadow: 1px 1px 0 #ffb347;
+  }
+  .flag-footer .btn {
+    font-family: inherit;
+    border-radius: 0;
+    border: 2px solid #222;
+    background: #ffb347;
+    color: #222;
+    box-shadow: 2px 2px 0 #222;
+    transition: background 0.2s;
+  }
+  .flag-footer .btn:hover {
+    background: #4ecdc4;
+    color: #fff;
+  }
+  .form-control, .form-select {
+    border-radius: 0;
+    border: 2px solid #222;
+    background: #fffbe6;
+    font-family: inherit;
+    color: #222;
+  }
+  .accordion-button {
+    font-family: inherit;
+    background: #ffb347;
+    color: #222;
+    border-radius: 0;
+    border: 2px solid #222;
+    box-shadow: 2px 2px 0 #222;
+  }
+  .accordion-button:not(.collapsed) {
+    background: #4ecdc4;
+    color: #fff;
+  }
+  .search-bar .form-control {
+    background: #fffbe6;
+    border: 2px solid #222;
+    font-family: inherit;
+  }
+  .badge {
+    font-family: inherit;
+    border-radius: 0;
+    border: 2px solid #222;
+    background: #ffb347;
+    color: #222;
+    box-shadow: 2px 2px 0 #222;
+  }
+  .badge.bg-danger {
+    background: #ff6f61 !important;
+    color: #fff !important;
+  }
+  .badge.bg-warning {
+    background: #ffe066 !important;
+    color: #222 !important;
+  }
+  .muted-small {
+    font-size: .85rem;
+    color: #888;
+    font-family: inherit;
+  }
+  .toast {
+    font-family: inherit;
+    border-radius: 0;
+    border: 2px solid #222;
+    box-shadow: 4px 4px 0 #ffb347;
+    background: #fffbe6;
+    color: #222;
+  }
+  .btn-primary {
+    background: #4ecdc4;
+    border: 2px solid #222;
+    border-radius: 0;
+    color: #fff;
+    font-family: inherit;
+    box-shadow: 2px 2px 0 #222;
+  }
+  .btn-primary:hover {
+    background: #ffb347;
+    color: #222;
+  }
+  .btn-outline-danger {
+    border: 2px solid #ff6f61;
+    color: #ff6f61;
+    background: #fffbe6;
+    border-radius: 0;
+  }
+  .btn-outline-danger:hover {
+    background: #ff6f61;
+    color: #fff;
+  }
+  .modal-content {
+    border-radius: 0;
+    border: 3px solid #222;
+    background: #fffbe6;
+    font-family: inherit;
+    box-shadow: 8px 8px 0 #ffb347;
+  }
+.flag-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .retro-switch {
+    cursor: pointer;
+    font-size: 2rem;
+    transition: color 0.2s;
+    margin-left: auto;
+    margin-right: 0;
+  }
+  .retro-switch.on { color: #4ecdc4; text-shadow: 0 0 4px #4ecdc4; }
+  .retro-switch.off { color: #888; text-shadow: 0 0 2px #ff6f61; }
+.form-select, .form-select option {
+  font-family: 'VT323', 'Courier New', Courier, monospace;
+  font-size: 1.2rem;
+  background: #fffbe6;
+  color: #222;
+}
+
