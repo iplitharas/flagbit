@@ -4,7 +4,7 @@
 
 <p><img title="flagbit logo" src="static/logo.png" width="500" height="300"></p>
 
-[![Flagbit Test Pipeline](https://github.com/iplitharas/flagbit/actions/workflows/test.yaml/badge.svg)](https://github.com/iplitharas/flagbit/actions/workflows/test.yaml)
+[![Test](https://github.com/iplitharas/flagbit/actions/workflows/test.yaml/badge.svg)](https://github.com/iplitharas/flagbit/actions/workflows/test.yaml)
 ![PyPI](https://img.shields.io/pypi/v/flagbit)
 <br/>
 ![GitHub License](https://img.shields.io/github/license/iplitharas/flagbit)
