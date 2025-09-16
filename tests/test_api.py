@@ -12,7 +12,6 @@ async def test_user_can_retrieve_all_flags(client, fake_flags_fixture):
          and the response status code to be `200`
     """
     # Given
-
     await fake_flags_fixture(10)
 
     # When
@@ -48,6 +47,7 @@ async def test_user_can_retrieve_a_single_flag(client, fake_flags_fixture):
     assert "name" in expected_response, "Response should contain flag name"
     assert "value" in expected_response, "Response should contain flag value"
     assert "desc" in expected_response, "Response should contain flag description"
+    assert "expired" in expected_response, "Response should contain flag expired status"
 
 
 def test_user_can_create_a_new_flag(client):
