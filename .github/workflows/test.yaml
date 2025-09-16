@@ -1,4 +1,4 @@
-name: Flagship Test Pipeline
+name: Flagbit Test Pipeline
 run-name: Pipeline run by @${{ github.actor }}
 
 on:
