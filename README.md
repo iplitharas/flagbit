@@ -7,7 +7,7 @@
 [![Flagbit Test Pipeline](https://github.com/iplitharas/flagbit/actions/workflows/test.yaml/badge.svg)](https://github.com/iplitharas/flagbit/actions/workflows/test.yaml)
 ![PyPI](https://img.shields.io/pypi/v/flagbit)
 <br/>
-![PyPI - License](https://img.shields.io/pypi/l/flagbit)
+![GitHub License](https://img.shields.io/github/license/iplitharas/flagbit)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/flagbit)
 <br/>
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
