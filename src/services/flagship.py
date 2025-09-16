@@ -16,7 +16,7 @@ class FlagAllowedUpdates(TypedDict, total=False):
     desc: str | None
 
 
-class FlagShipService:
+class FlagBitService:
     def __init__(self, repo: FlagsShipRepo) -> None:
         self.repo = repo
 

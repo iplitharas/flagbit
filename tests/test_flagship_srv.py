@@ -5,20 +5,20 @@ from pytz import utc
 
 from src.exceptions import FlagNotFoundException
 from src.repo.fake_repo import FakeInMemoryRepo
-from src.services.flagship import FlagAllowedUpdates, FlagShipService
+from src.services.flagship import FlagAllowedUpdates, FlagBitService
 
 
 @pytest.mark.asyncio
 async def test_user_can_add_a_new_flag():
     """
     Given a `flag` name and some initial `boolean` value
-    When I call the `create_flag` method from `FlagShipService,`
+    When I call the `create_flag` method from `FlagBitService,`
     Then I'm expected a new `Flag` instance to be return
          with the right arguments.
     """
 
     # Given
-    flagship = FlagShipService(repo=FakeInMemoryRepo())
+    flagship = FlagBitService(repo=FakeInMemoryRepo())
     flag_name = "my first flag"
     value = False
 
@@ -45,11 +45,11 @@ async def test_user_can_update_an_existing_flag_by_its_flag_id_and_the_new_field
 ):
     """
     Given an existing `Flag` and some new fields to update
-    When I call the `update_flag` method from `FlagShipService`
+    When I call the `update_flag` method from `FlagBitService`
     Then I'm expecting the `Flag` to be updated with the new value
     """
     # Given
-    flagship = FlagShipService(repo=FakeInMemoryRepo())
+    flagship = FlagBitService(repo=FakeInMemoryRepo())
     existing_flag = await flagship.create_flag("my flag", value=True)
 
     updated_data = {updated_field_name: updated_field_value}
@@ -70,11 +70,11 @@ async def test_user_can_update_an_existing_flag_by_its_flag_id_and_the_new_field
 async def test_user_cannot_update_flag_that_does_not_exist():
     """
     Given a non-existing `Flag`
-    When I call the `update_flag` method from `FlagShipService`
+    When I call the `update_flag` method from `FlagBitService`
     Then I'm expecting a `ValueError` to be raised
     """
     # Given
-    flagship = FlagShipService(repo=FakeInMemoryRepo())
+    flagship = FlagBitService(repo=FakeInMemoryRepo())
     updated_fields = FlagAllowedUpdates(name="new name")
 
     # When / Then
@@ -86,11 +86,11 @@ async def test_user_cannot_update_flag_that_does_not_exist():
 async def test_user_can_see_all_flags():
     """
     Given some `Flags`
-    When I call the `list` method from `FlagShipService`
+    When I call the `list` method from `FlagBitService`
     Then I'm expecting an Iterable of flags
     """
     # Given
-    flagship = FlagShipService(repo=FakeInMemoryRepo())
+    flagship = FlagBitService(repo=FakeInMemoryRepo())
     await flagship.create_flag("first flag", value=True)
     await flagship.create_flag("second flag", value=False)
 
@@ -119,7 +119,7 @@ async def test_user_can_get_flag_value_with_is_enabled_method_if_its_not_expired
     Then I'm expecting `True`
     """
     # Given
-    flagship = FlagShipService(repo=FakeInMemoryRepo())
+    flagship = FlagBitService(repo=FakeInMemoryRepo())
     await flagship.create_flag("first flag", value=flag_value)
     # When
     received_value = await flagship.is_enabled("first flag")
@@ -135,7 +135,7 @@ async def test_user_can_see_flag_as_disabled_even_if_value_is_true_but_its_expir
     Then I'm expecting `False`
     """
     # Given
-    flagship = FlagShipService(repo=FakeInMemoryRepo())
+    flagship = FlagBitService(repo=FakeInMemoryRepo())
     flag = await flagship.create_flag("first flag", value=True)
     flag.expiration_date = datetime.now(tz=utc) - timedelta(days=1)
     # When

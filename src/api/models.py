@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -12,6 +14,10 @@ class FlagResponse(BaseModel):
     value: bool
     desc: str | None = None
     expired: bool
+    id: str
+    date_updated: datetime
+    expiration_date: datetime | None = None
+    date_created: datetime
 
 
 class FlagUpdateRequest(BaseModel):
