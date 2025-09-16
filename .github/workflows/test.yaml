@@ -1,4 +1,4 @@
-name: Test Project Template
+name: Flagship Test Pipeline
 run-name: Pipeline run by @${{ github.actor }}
 
 on:
