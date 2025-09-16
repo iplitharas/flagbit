@@ -66,5 +66,5 @@ def clean_collection() -> None:
 
 if __name__ == "__main__":
     clean_collection()
-    fake_flags = create_fake_flags(num_flags=10)
+    fake_flags = create_fake_flags(num_flags=5)
     store_fake_flags(flags=fake_flags)

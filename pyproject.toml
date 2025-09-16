@@ -1,7 +1,11 @@
 [project]
+<<<<<<< HEAD
 name = "flagkaptain"
+=======
+name = "flagbit"
+>>>>>>> f0c3f7b (rename project)
 version = "0.1.0"
-description = "Add your description here"
+description = "A 🐍 open source package for flag management 🚩"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
