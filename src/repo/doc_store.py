@@ -88,9 +88,5 @@ class DocStoreRepo:
         Delete all Flag documents from the MongoDB collection.
         """
         collection = self._client.get_flags_collection()
-<<<<<<< HEAD
-        result = await  collection.delete_many({})
-=======
         result: DeleteResult = await collection.delete_many({})
->>>>>>> e2e7a0c (add more test cases for doc store)
         return result.deleted_count > 0
