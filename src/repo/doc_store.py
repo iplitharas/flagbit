@@ -5,6 +5,8 @@ Implements a document storage repo for MongoDB.
 from dataclasses import asdict
 from typing import Any
 
+from pymongo.results import DeleteResult
+
 from src.clients.mongo_db_client import MongoDBAsyncClient
 from src.domain.flag import Flag
 
@@ -81,9 +83,9 @@ class DocStoreRepo:
         result = await collection.delete_one({"_id": _id})
         return result.deleted_count > 0
 
-    async def delete_all(self) -> None:
+    async def delete_all(self) -> DeleteResult:
         """
         Delete all Flag documents from the MongoDB collection.
         """
         collection = self._client.get_flags_collection()
-        await collection.delete_many({})
+        return await collection.delete_many({})
