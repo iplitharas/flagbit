@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from src.api.dependencies import get_flag_bit_service
 from src.api.models import FlagRequest, FlagResponse, FlagUpdateRequest
 from src.domain.flag import Flag
-from src.services.flagship import FlagAllowedUpdates, FlagBitService
+from src.services.flagbit import FlagAllowedUpdates, FlagBitService
 
 flags_router = APIRouter()
 

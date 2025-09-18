@@ -10,7 +10,7 @@ from src.api.dependencies import get_flag_bit_service
 from src.api.flags_router import flags_router
 from src.domain.flag import Flag
 from src.repo.fake_repo import FakeInMemoryRepo
-from src.services.flagship import FlagBitService
+from src.services.flagbit import FlagBitService
 
 
 @pytest.fixture(scope="module")

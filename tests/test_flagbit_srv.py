@@ -5,7 +5,7 @@ from pytz import utc
 
 from src.exceptions import FlagNotFoundException
 from src.repo.fake_repo import FakeInMemoryRepo
-from src.services.flagship import FlagAllowedUpdates, FlagBitService
+from src.services.flagbit import FlagAllowedUpdates, FlagBitService
 
 
 @pytest.mark.asyncio
