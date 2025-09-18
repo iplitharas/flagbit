@@ -83,9 +83,10 @@ class DocStoreRepo:
         result = await collection.delete_one({"_id": _id})
         return result.deleted_count > 0
 
-    async def delete_all(self) -> DeleteResult:
+    async def delete_all(self) -> bool:
         """
         Delete all Flag documents from the MongoDB collection.
         """
         collection = self._client.get_flags_collection()
-        return await collection.delete_many({})
+        result = await  collection.delete_many({})
+        return result.deleted_count > 0
