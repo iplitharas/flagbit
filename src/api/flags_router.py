@@ -1,11 +1,12 @@
 from http import HTTPStatus
-from typing import cast
+from typing import Annotated, cast
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from src.api.dependencies import get_flag_bit_service
 from src.api.models import FlagRequest, FlagResponse, FlagUpdateRequest
 from src.domain.flag import Flag
+from src.exceptions import FlagNotFoundError
 from src.services.flagbit import FlagAllowedUpdates, FlagBitService
 
 flags_router = APIRouter()
@@ -19,8 +20,7 @@ flags_router = APIRouter()
     description="Retrieve all feature flags",
 )
 async def flags(
-    flagbit: FlagBitService = Depends(get_flag_bit_service),  # noqa: B008
-    flag_name: str | None = None,
+    flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)], flag_name: str | None = None
 ) -> list[Flag] | None:
     return await flagbit.get_all_flags(flag_name=flag_name)
 
@@ -32,8 +32,7 @@ async def flags(
     description="Retrieve the value of a feature flag by name",
 )
 async def get_flag_value(
-    flag_name: str,
-    flagbit: FlagBitService = Depends(get_flag_bit_service),  # noqa: B008
+    flag_name: str, flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)]
 ) -> bool:
     try:
         return await flagbit.is_enabled(name=flag_name)
@@ -50,7 +49,7 @@ async def get_flag_value(
 )
 async def get_flag_by_id(
     flag_id: str,
-    flagbit: FlagBitService = Depends(get_flag_bit_service),  # noqa: B008
+    flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)],
 ) -> Flag:
     if flag := await flagbit.get_flag(flag_id=flag_id):
         return flag
@@ -66,7 +65,7 @@ async def get_flag_by_id(
 )
 async def new_flag(
     flag: FlagRequest,
-    flagbit: FlagBitService = Depends(get_flag_bit_service),  # noqa: B008
+    flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)],
 ) -> Flag:
     return await flagbit.create_flag(name=flag.name, value=flag.value, desc=flag.desc)
 
@@ -82,14 +81,16 @@ async def new_flag(
 async def update_flag(
     flag_id: str,
     updated_fields: FlagUpdateRequest,
-    flagbit: FlagBitService = Depends(get_flag_bit_service),  # noqa: B008
+    flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)],
 ) -> Flag:
     try:
         return await flagbit.update_flag(
             flag_id=flag_id,
-            updated_fields=cast(FlagAllowedUpdates, updated_fields.model_dump(exclude_unset=True)),
+            updated_fields=cast(
+                "FlagAllowedUpdates", updated_fields.model_dump(exclude_unset=True)
+            ),
         )
-    except Exception:
+    except FlagNotFoundError:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")  # noqa: B904
 
 
@@ -102,7 +103,7 @@ async def update_flag(
 )
 async def delete_flag(
     flag_id: str,
-    flagbit: FlagBitService = Depends(get_flag_bit_service),  # noqa: B008
+    flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)],
 ) -> None:
     success = await flagbit.delete_flag(flag_id=flag_id)
     if not success:

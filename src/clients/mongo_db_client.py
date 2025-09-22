@@ -24,7 +24,7 @@ class MongoDBAsyncClient:
         self,
         config: MongoDBConfig | None = None,
         client: AsyncMongoClient | None = None,  # type: ignore
-    ):
+    ) -> None:
         self.config = config or MongoDBConfig()
         self._client = client or AsyncMongoClient
 
@@ -63,7 +63,8 @@ class MongoDBAsyncClient:
         except ServerSelectionTimeoutError as error:
             logger.error(f"Could not connect to MongoDB: {error}")
             self._client = None  # type: ignore
-            raise ConnectionError("Failed to connect to MongoDB") from None
+            msg = "Failed to connect to MongoDB"
+            raise ConnectionError(msg) from None
 
         await self._collection_check()
 
@@ -78,6 +79,5 @@ class MongoDBAsyncClient:
         if self._client:
             db = self._client[self.config.db]
             return db[self.config.collection]  # type: ignore
-        else:
-            logger.error("MongoDB client is not connected.")
-            return None  # type: ignore
+        logger.error("MongoDB client is not connected.")
+        return None  # type: ignore

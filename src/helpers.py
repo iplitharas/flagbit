@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from src.types import EXP_UNIT_T
+from src._types import EXP_UNIT_T
 
 
 def new_expiration_date(current_datetime: datetime, unit: EXP_UNIT_T, value: int) -> datetime:
@@ -14,4 +14,5 @@ def new_expiration_date(current_datetime: datetime, unit: EXP_UNIT_T, value: int
         case "w":
             return current_datetime + timedelta(weeks=value)
         case _:
-            raise ValueError(f"Invalid time unit: {unit}")
+            msg = f"Invalid time unit: {unit}"
+            raise ValueError(msg)

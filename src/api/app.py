@@ -11,7 +11,7 @@ from src.clients.mongo_db_client import MongoDBAsyncClient
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):  # type: ignore
+async def lifespan(app: FastAPI):  # type: ignore #noqa: ANN201
     mongo_client = MongoDBAsyncClient()
     await mongo_client.connect()
     app.state.mongo_client = mongo_client

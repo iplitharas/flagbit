@@ -334,7 +334,3 @@ async def test_doc_store_get_all_method_returns_empty_list_if_no_flags_exist():
     # Then
     assert fake_collection.find.call_count == 1, "find was not called exactly once"
     assert result == [], "get_all did not return an empty list when no Flags exist"
-
-
-
-

@@ -45,17 +45,15 @@ target-version = "py312"
 
 
 lint.select = [
-  "E",   # pycodestyle (errors)
-  "F",   # pyflakes
-  "I",   # isort (import sorting)
-  "UP",  # pyupgrade (modernize syntax for 3.12)
-  "B",   # flake8-bugbear (common bugs/pitfalls)
-  "SIM", # flake8-simplify
-  "C4",  # flake8-comprehensions
+"ALL"
 ]
 
 lint.ignore = [
   "E501",  # line length (let formatter handle wrapping)
+    "D", # ignore any docstring issues (we'll use pydocstyle separately)
+    "COM812", # line break before binary operator (handled by formatter)
+    "ERA001", # Found commented-out code
+    "PGH003", # Use specific rule codes when ignoring type issues
 ]
 
 # Maximum line length (matches Black’s default)
@@ -68,6 +66,7 @@ exclude = [
   "__pycache__",
   "build",
   "dist",
+    "**/tests/*.py"
 ]
 
 [tool.ruff.format]

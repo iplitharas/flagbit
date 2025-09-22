@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import pytest
 from pytz import utc
 
-from src.exceptions import FlagNotFoundException
+from src.exceptions import FlagNotFoundError
 from src.repo.fake_repo import FakeInMemoryRepo
 from src.services.flagbit import FlagAllowedUpdates, FlagBitService
 
@@ -78,7 +78,7 @@ async def test_user_cannot_update_flag_that_does_not_exist():
     updated_fields = FlagAllowedUpdates(name="new name")
 
     # When / Then
-    with pytest.raises(FlagNotFoundException):
+    with pytest.raises(FlagNotFoundError):
         await flagship.update_flag(flag_id="non-existing-flag-id", updated_fields=updated_fields)
 
 

@@ -3,9 +3,10 @@ Implements a document storage repo for MongoDB.
 """
 
 from dataclasses import asdict
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from pymongo.results import DeleteResult
+if TYPE_CHECKING:
+    from pymongo.results import DeleteResult
 
 from src.clients.mongo_db_client import MongoDBAsyncClient
 from src.domain.flag import Flag
@@ -64,8 +65,7 @@ class DocStoreRepo:
         """
         coll = self._client.get_flags_collection()
         documents = await coll.find().to_list(limit)
-        flags = [document_to_flag(doc=document) for document in documents]
-        return flags
+        return [document_to_flag(doc=document) for document in documents]
 
     async def update(self, flag: Flag) -> bool:
         """

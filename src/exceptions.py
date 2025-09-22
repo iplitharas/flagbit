@@ -1,2 +1,2 @@
-class FlagNotFoundException(Exception):
+class FlagNotFoundError(Exception):
     pass
