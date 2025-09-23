@@ -23,7 +23,7 @@ class FlagsShipRepo(Protocol):
     async def get_by_name(self, name: str) -> Flag:
         """
         Retrieve a Flag by its name from the repository.
-            raises: `RepoNotFoundError` if the Flag with the given name does not exist.
+        raises: `RepoNotFoundError` if the Flag with the given name does not exist.
         raises: `ServerSelectionTimeoutError` if the database server is unreachable.
         """
         raise NotImplementedError

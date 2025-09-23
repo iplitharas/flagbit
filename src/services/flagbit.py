@@ -36,12 +36,15 @@ class FlagBitService:
         """
         Create a new `Flag` with the provided `name`, `value`, `desc`, `exp_unit` and `exp_value`.
         """
-        expiration_date = new_expiration_date(
-            current_datetime=datetime.now(tz=utc), unit=exp_unit, value=exp_value
-        )
-        new_flag = Flag(name=name, value=value, desc=desc, expiration_date=expiration_date)
-        await self.repo.store(flag=new_flag)
-        return new_flag
+        try:
+            expiration_date = new_expiration_date(
+                current_datetime=datetime.now(tz=utc), unit=exp_unit, value=exp_value
+            )
+            new_flag = Flag(name=name, value=value, desc=desc, expiration_date=expiration_date)
+            await self.repo.store(flag=new_flag)
+            return new_flag
+        except RepositoryConnError:
+            raise FlagPersistenceError from None
 
     async def get_flag(self, flag_id: str) -> Flag:
         try:
