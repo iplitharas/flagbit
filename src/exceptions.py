@@ -6,11 +6,11 @@ Custom exceptions for feature flag management.
 # ####################################################
 # #### Repo custom exceptions ########################
 # ####################################################
-class FlagNotFoundError(Exception):
+class RepositoryConnectionError(Exception):
     pass
 
 
-class RepoNotFoundError(Exception):
+class RepositoryNotFoundError(Exception):
     pass
 
 
@@ -19,7 +19,7 @@ class RepoNotFoundError(Exception):
 # ####################################################
 
 
-class RepositoryConnError(Exception):
+class FlagNotFoundError(Exception):
     pass
 
 

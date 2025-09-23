@@ -8,8 +8,8 @@ from src.domain.flag import Flag
 from src.exceptions import (
     FlagNotFoundError,
     FlagPersistenceError,
-    RepoNotFoundError,
-    RepositoryConnError,
+    RepositoryConnectionError,
+    RepositoryNotFoundError,
 )
 from src.helpers import new_expiration_date
 from src.repo.base import FlagsShipRepo
@@ -42,16 +42,16 @@ class FlagBitService:
             )
             new_flag = Flag(name=name, value=value, desc=desc, expiration_date=expiration_date)
             await self.repo.store(flag=new_flag)
-            return new_flag
-        except RepositoryConnError:
+            return new_flag  # noqa: TRY300
+        except RepositoryConnectionError:
             raise FlagPersistenceError from None
 
     async def get_flag(self, flag_id: str) -> Flag:
         try:
             return await self.repo.get_by_id(_id=flag_id)
-        except RepoNotFoundError:
+        except RepositoryNotFoundError:
             raise FlagNotFoundError from None
-        except RepositoryConnError:
+        except RepositoryConnectionError:
             raise FlagPersistenceError from None
 
     async def is_enabled(self, name: str) -> bool:
@@ -63,9 +63,9 @@ class FlagBitService:
             if flag := await self.repo.get_by_name(name=name):
                 return False if flag.expired else flag.value
             return False  # noqa: TRY300
-        except RepoNotFoundError:
+        except RepositoryNotFoundError:
             raise FlagNotFoundError from None
-        except RepositoryConnError:
+        except RepositoryConnectionError:
             raise FlagPersistenceError from None
 
     async def update_flag(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:  # type: ignore[return]
@@ -79,9 +79,9 @@ class FlagBitService:
                         setattr(existing_flag, key, value)
                 existing_flag.date_updated = datetime.now(tz=utc)
                 return await self.repo.update(existing_flag)
-        except RepoNotFoundError:
+        except RepositoryNotFoundError:
             raise FlagNotFoundError from None
-        except RepositoryConnError:
+        except RepositoryConnectionError:
             raise FlagPersistenceError from None
 
     async def get_all_flags(self, flag_name: str | None = None) -> list[Flag] | None:  # noqa: ARG002
@@ -90,7 +90,7 @@ class FlagBitService:
         #     return [flag] if flag else []
         try:
             return await self.repo.get_all()
-        except RepositoryConnError:
+        except RepositoryConnectionError:
             raise FlagPersistenceError from None
 
     async def delete_flag(self, flag_id: str) -> None:
@@ -99,8 +99,8 @@ class FlagBitService:
         """
         try:
             await self.repo.delete(_id=flag_id)
-        except RepoNotFoundError:
+        except RepositoryNotFoundError:
             err_msg = f"Flag with id: `{flag_id}` not found for deletion."
             raise FlagNotFoundError(err_msg) from None
-        except RepositoryConnError:
+        except RepositoryConnectionError:
             raise FlagPersistenceError from None

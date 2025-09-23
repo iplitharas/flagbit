@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 from loguru import logger
 from pymongo.errors import ServerSelectionTimeoutError
 
-from src.exceptions import RepoNotFoundError, RepositoryConnError
+from src.exceptions import RepositoryConnectionError, RepositoryNotFoundError
 
 if TYPE_CHECKING:
     from pymongo.results import DeleteResult
@@ -49,7 +49,7 @@ class DocStoreRepo:
         except ServerSelectionTimeoutError as error:
             logger.error(f"Failed to connect to MongoDB server: `{error}`")
             err_msg = "Cannot connect to the MongoDB server, during store operation."
-            raise RepositoryConnError(err_msg) from None
+            raise RepositoryConnectionError(err_msg) from None
 
     async def get_by_id(self, _id: str) -> Flag:
         """
@@ -60,11 +60,11 @@ class DocStoreRepo:
             if document := await coll.find_one({"_id": _id}):
                 return document_to_flag(doc=document)
             msg = f"Flag with id: `{_id}` not found."
-            raise RepoNotFoundError(msg)
+            raise RepositoryNotFoundError(msg)
         except ServerSelectionTimeoutError as error:
             logger.error(f"Failed to connect to MongoDB server: `{error}`")
             err_msg = "Cannot connect to the MongoDB server, during get_by_id operation."
-            raise RepositoryConnError(err_msg) from None
+            raise RepositoryConnectionError(err_msg) from None
 
     async def get_by_name(self, name: str) -> Flag:
         """
@@ -75,11 +75,11 @@ class DocStoreRepo:
             if document := await coll.find_one({"name": name}):
                 return document_to_flag(doc=document)
             msg = f"Flag with name: `{name}` not found."
-            raise RepoNotFoundError(msg)
+            raise RepositoryNotFoundError(msg)
         except ServerSelectionTimeoutError as error:
             logger.error(f"Failed to connect to MongoDB server: `{error}`")
             err_msg = "Cannot connect to the MongoDB server, during get_by_name operation."
-            raise RepositoryConnError(err_msg) from None
+            raise RepositoryConnectionError(err_msg) from None
 
     async def get_all(self, limit: int = 100) -> list[Flag]:
         """
@@ -92,7 +92,7 @@ class DocStoreRepo:
         except ServerSelectionTimeoutError as error:
             logger.error(f"Failed to connect to MongoDB server: `{error}`")
             err_msg = "Cannot connect to the MongoDB server, during get_all operation."
-            raise RepositoryConnError(err_msg) from None
+            raise RepositoryConnectionError(err_msg) from None
 
     async def update(self, flag: Flag) -> Flag:
         """
@@ -103,13 +103,13 @@ class DocStoreRepo:
             result = await collection.replace_one({"_id": str(flag.id)}, flag_to_document(flag))
             if result.matched_count == 0:
                 err_msg = f"Flag with id: `{flag.id}` not found for update."
-                raise RepoNotFoundError(err_msg)
+                raise RepositoryNotFoundError(err_msg)
 
             return flag  # noqa: TRY300
         except ServerSelectionTimeoutError as error:
             logger.error(f"Failed to connect to MongoDB server: `{error}`")
             err_msg = "Cannot connect to the MongoDB server, during update operation."
-            raise RepositoryConnError(err_msg) from None
+            raise RepositoryConnectionError(err_msg) from None
 
     async def delete(self, _id: str) -> None:
         """
@@ -120,11 +120,11 @@ class DocStoreRepo:
             result: DeleteResult = await collection.delete_one({"_id": _id})
             if result.deleted_count == 0:
                 err_msg = f"Flag with id `{_id}` not found for deletion."
-                raise RepoNotFoundError(err_msg)
+                raise RepositoryNotFoundError(err_msg)
         except ServerSelectionTimeoutError as error:
             logger.error(f"Failed to connect to MongoDB server: `{error}`")
             err_msg = "Cannot connect to the MongoDB server, during delete operation."
-            raise RepositoryConnError(err_msg) from None
+            raise RepositoryConnectionError(err_msg) from None
 
     async def delete_all(self) -> None:
         """
@@ -138,4 +138,4 @@ class DocStoreRepo:
         except ServerSelectionTimeoutError as error:
             logger.error(f"Failed to connect to MongoDB server: `{error}`")
             err_msg = "Cannot connect to the MongoDB server, during delete_all operation."
-            raise RepositoryConnError(err_msg) from None
+            raise RepositoryConnectionError(err_msg) from None

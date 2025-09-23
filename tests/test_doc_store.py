@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.domain.flag import Flag
-from src.exceptions import RepoNotFoundError
+from src.exceptions import RepositoryNotFoundError
 from src.repo.doc_store import DocStoreRepo, MongoDBAsyncClient, flag_to_document
 
 
@@ -78,7 +78,7 @@ async def test_doc_store_delete_method_with_invalid_id():
     Given a `DocumentStore` instance with it's `MongoDBAsyncClient` mocked
     When I call, the `delete` method with an invalid ID.
     Then I'm expecting the `delete_one` method of the collection to be called once with the correct filter
-          and an `RepoNotFoundError` to be raised.
+          and an `RepositoryNotFoundError` to be raised.
     """
     # Given
     mocked_client = MagicMock(spec=MongoDBAsyncClient)
@@ -94,7 +94,7 @@ async def test_doc_store_delete_method_with_invalid_id():
     invalid_id = "invalid_id"
 
     # When
-    with pytest.raises(RepoNotFoundError):
+    with pytest.raises(RepositoryNotFoundError):
         result = await doc_store.delete(_id=invalid_id)
 
     # Then
@@ -204,7 +204,7 @@ async def test_doc_store_get_by_id_method_with_invalid_id():
     Given a `DocStoreRepo` instance with its `MongoDBAsyncClient` mocked
     When I call the `get_by_id` method with a non-existing Flag ID
     Then I'm expecting the `find_one` method of the collection to be called once with the correct filter
-         and an exception `RepoNotFoundError` to be raised
+         and an exception `RepositoryNotFoundError` to be raised
     """
     # Given
     mocked_client = MagicMock(spec=MongoDBAsyncClient)
@@ -217,7 +217,7 @@ async def test_doc_store_get_by_id_method_with_invalid_id():
     non_existing_id = "non_existing_id"
 
     # When
-    with pytest.raises(RepoNotFoundError):
+    with pytest.raises(RepositoryNotFoundError):
         await doc_store.get_by_id(_id=non_existing_id)
 
         # Then
@@ -263,7 +263,7 @@ async def test_doc_store_get_by_name_method_with_invalid_name():
     Given a `DocStoreRepo` instance with its `MongoDBAsyncClient` mocked
     When I call the `get_by_name` method with a non-existing Flag name
     Then I'm expecting the `find_one` method of the collection to be called once with the correct filter
-         and an exception `RepoNotFoundError` to be raised
+         and an exception `RepositoryNotFoundError` to be raised
     """
     # Given
     mocked_client = MagicMock(spec=MongoDBAsyncClient)
@@ -276,7 +276,7 @@ async def test_doc_store_get_by_name_method_with_invalid_name():
     non_existing_name = "non_existing_name"
 
     # When
-    with pytest.raises(RepoNotFoundError):
+    with pytest.raises(RepositoryNotFoundError):
         await doc_store.get_by_name(name=non_existing_name)
         # Then
         assert fake_collection.find_one.call_count == 1, "find_one was not called exactly once"
