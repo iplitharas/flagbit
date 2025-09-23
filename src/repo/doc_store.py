@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 from loguru import logger
 from pymongo.errors import ServerSelectionTimeoutError
 
-from src.exceptions import NotFoundError, RepositoryConnError
+from src.exceptions import RepoNotFoundError, RepositoryConnError
 
 if TYPE_CHECKING:
     from pymongo.results import DeleteResult
@@ -60,7 +60,7 @@ class DocStoreRepo:
             if document := await coll.find_one({"_id": _id}):
                 return document_to_flag(doc=document)
             msg = f"Flag with id: `{_id}` not found."
-            raise NotFoundError(msg)
+            raise RepoNotFoundError(msg)
         except ServerSelectionTimeoutError as error:
             logger.error(f"Failed to connect to MongoDB server: `{error}`")
             err_msg = "Cannot connect to the MongoDB server, during get_by_id operation."
@@ -75,7 +75,7 @@ class DocStoreRepo:
             if document := await coll.find_one({"name": name}):
                 return document_to_flag(doc=document)
             msg = f"Flag with name: `{name}` not found."
-            raise NotFoundError(msg)
+            raise RepoNotFoundError(msg)
         except ServerSelectionTimeoutError as error:
             logger.error(f"Failed to connect to MongoDB server: `{error}`")
             err_msg = "Cannot connect to the MongoDB server, during get_by_name operation."
@@ -103,7 +103,7 @@ class DocStoreRepo:
             result = await collection.replace_one({"_id": str(flag.id)}, flag_to_document(flag))
             if result.matched_count == 0:
                 err_msg = f"Flag with id: `{flag.id}` not found for update."
-                raise NotFoundError(err_msg)
+                raise RepoNotFoundError(err_msg)
 
             return flag  # noqa: TRY300
         except ServerSelectionTimeoutError as error:
@@ -120,7 +120,7 @@ class DocStoreRepo:
             result: DeleteResult = await collection.delete_one({"_id": _id})
             if result.deleted_count == 0:
                 err_msg = f"Flag with id `{_id}` not found for deletion."
-                raise NotFoundError(err_msg)
+                raise RepoNotFoundError(err_msg)
         except ServerSelectionTimeoutError as error:
             logger.error(f"Failed to connect to MongoDB server: `{error}`")
             err_msg = "Cannot connect to the MongoDB server, during delete operation."

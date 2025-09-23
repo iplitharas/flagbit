@@ -1,5 +1,5 @@
 from src.domain.flag import Flag
-from src.exceptions import NotFoundError
+from src.exceptions import RepoNotFoundError
 
 
 class FakeInMemoryRepo:
@@ -20,7 +20,7 @@ class FakeInMemoryRepo:
         if flag:
             return flag
         error_msg = f"Flag with id: `{_id}` not found."
-        raise NotFoundError(error_msg) from None
+        raise RepoNotFoundError(error_msg) from None
 
     async def get_by_name(self, name: str) -> Flag | None:
         """
@@ -45,7 +45,7 @@ class FakeInMemoryRepo:
             self.mem_store[flag.id] = flag
             return flag
         error_msg = f"Flag with id: `{flag.id}` not found for update."
-        raise NotFoundError(error_msg) from None
+        raise RepoNotFoundError(error_msg) from None
 
     async def delete(self, _id: str) -> None:
         """
@@ -55,4 +55,4 @@ class FakeInMemoryRepo:
             del self.mem_store[_id]
             return
         error_msg = f"Flag with id `{_id}` not found for deletion."
-        raise NotFoundError(error_msg)
+        raise RepoNotFoundError(error_msg)

@@ -8,7 +8,7 @@ from src.domain.flag import Flag
 from src.exceptions import (
     FlagNotFoundError,
     FlagPersistenceError,
-    NotFoundError,
+    RepoNotFoundError,
     RepositoryConnError,
 )
 from src.helpers import new_expiration_date
@@ -46,7 +46,7 @@ class FlagBitService:
     async def get_flag(self, flag_id: str) -> Flag:
         try:
             return await self.repo.get_by_id(_id=flag_id)
-        except NotFoundError:
+        except RepoNotFoundError:
             raise FlagNotFoundError from None
         except RepositoryConnError:
             raise FlagPersistenceError from None
@@ -60,7 +60,7 @@ class FlagBitService:
             if flag := await self.repo.get_by_name(name=name):
                 return False if flag.expired else flag.value
             return False  # noqa: TRY300
-        except NotFoundError:
+        except RepoNotFoundError:
             raise FlagNotFoundError from None
         except RepositoryConnError:
             raise FlagPersistenceError from None
@@ -76,7 +76,7 @@ class FlagBitService:
                         setattr(existing_flag, key, value)
                 existing_flag.date_updated = datetime.now(tz=utc)
                 return await self.repo.update(existing_flag)
-        except NotFoundError:
+        except RepoNotFoundError:
             raise FlagNotFoundError from None
         except RepositoryConnError:
             raise FlagPersistenceError from None
@@ -96,7 +96,7 @@ class FlagBitService:
         """
         try:
             await self.repo.delete(_id=flag_id)
-        except NotFoundError:
+        except RepoNotFoundError:
             err_msg = f"Flag with id: `{flag_id}` not found for deletion."
             raise FlagNotFoundError(err_msg) from None
         except RepositoryConnError:

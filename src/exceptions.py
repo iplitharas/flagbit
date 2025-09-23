@@ -1,13 +1,22 @@
+"""
+Custom exceptions for feature flag management.
+"""
+
+
+# ####################################################
+# #### Repo custom exceptions ########################
+# ####################################################
 class FlagNotFoundError(Exception):
     pass
 
 
-class NotFoundError(Exception):
+class RepoNotFoundError(Exception):
     pass
 
 
-class DeleteAllError(Exception):
-    pass
+# ####################################################
+# ### Service custom exceptions ######################
+# ####################################################
 
 
 class RepositoryConnError(Exception):
