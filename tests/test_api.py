@@ -123,7 +123,6 @@ def test_user_cannot_update_a_non_existing_flag(client):
 
     # When
     response = client.patch(f"/flags/{non_existing_flag_id}", json=updated_data)
-
     # Then
     assert response.status_code == HTTPStatus.NOT_FOUND, "Expected status code 404"
 

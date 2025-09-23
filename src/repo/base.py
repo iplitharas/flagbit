@@ -1,8 +1,9 @@
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 from src.domain.flag import Flag
 
 
+@runtime_checkable
 class FlagsShipRepo(Protocol):
     async def store(self, flag: Flag) -> None:
         """
@@ -10,13 +11,13 @@ class FlagsShipRepo(Protocol):
         """
         raise NotImplementedError
 
-    async def get_by_id(self, _id: str) -> Flag | None:
+    async def get_by_id(self, _id: str) -> Flag:
         """
         Retrieve a Flag by its ID from the repository.
         """
         raise NotImplementedError
 
-    async def get_by_name(self, name: str) -> Flag | None:
+    async def get_by_name(self, name: str) -> Flag:
         """
         Retrieve a Flag by its name from the repository.
         """

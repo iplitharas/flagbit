@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from src.api.dependencies import get_flag_bit_service
 from src.api.models import FlagRequest, FlagResponse, FlagUpdateRequest
 from src.domain.flag import Flag
-from src.exceptions import FlagNotFoundError
+from src.exceptions import FlagNotFoundError, FlagPersistenceError
 from src.services.flagbit import FlagAllowedUpdates, FlagBitService
 
 flags_router = APIRouter()
@@ -22,7 +22,13 @@ flags_router = APIRouter()
 async def flags(
     flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)], flag_name: str | None = None
 ) -> list[Flag] | None:
-    return await flagbit.get_all_flags(flag_name=flag_name)
+    try:
+        return await flagbit.get_all_flags(flag_name=flag_name)
+    except FlagPersistenceError:
+        raise HTTPException(
+            status_code=HTTPStatus.SERVICE_UNAVAILABLE,
+            detail="Error retrieving flags due to persistence issue",
+        ) from None
 
 
 @flags_router.get(
@@ -36,8 +42,13 @@ async def get_flag_value(
 ) -> bool:
     try:
         return await flagbit.is_enabled(name=flag_name)
-    except Exception as e:
+    except FlagNotFoundError as e:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=str(e)) from e
+    except FlagPersistenceError:
+        raise HTTPException(
+            status_code=HTTPStatus.SERVICE_UNAVAILABLE,
+            detail="Error deleting flag due to persistence issue",
+        ) from None
 
 
 @flags_router.get(
@@ -51,9 +62,15 @@ async def get_flag_by_id(
     flag_id: str,
     flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)],
 ) -> Flag:
-    if flag := await flagbit.get_flag(flag_id=flag_id):
-        return flag
-    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
+    try:
+        return await flagbit.get_flag(flag_id=flag_id)
+    except FlagNotFoundError:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found") from None
+    except FlagPersistenceError:
+        raise HTTPException(
+            status_code=HTTPStatus.SERVICE_UNAVAILABLE,
+            detail="Error deleting flag due to persistence issue",
+        ) from None
 
 
 @flags_router.post(
@@ -67,7 +84,13 @@ async def new_flag(
     flag: FlagRequest,
     flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)],
 ) -> Flag:
-    return await flagbit.create_flag(name=flag.name, value=flag.value, desc=flag.desc)
+    try:
+        return await flagbit.create_flag(name=flag.name, value=flag.value, desc=flag.desc)
+    except FlagPersistenceError:
+        raise HTTPException(
+            status_code=HTTPStatus.SERVICE_UNAVAILABLE,
+            detail="Error deleting flag due to persistence issue",
+        ) from None
 
 
 @flags_router.patch(
@@ -92,6 +115,11 @@ async def update_flag(
         )
     except FlagNotFoundError:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")  # noqa: B904
+    except FlagPersistenceError:
+        raise HTTPException(
+            status_code=HTTPStatus.SERVICE_UNAVAILABLE,
+            detail="Error deleting flag due to persistence issue",
+        ) from None
 
 
 @flags_router.delete(
@@ -109,3 +137,8 @@ async def delete_flag(
         await flagbit.delete_flag(flag_id=flag_id)
     except FlagNotFoundError:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found") from None
+    except FlagPersistenceError:
+        raise HTTPException(
+            status_code=HTTPStatus.SERVICE_UNAVAILABLE,
+            detail="Error deleting flag due to persistence issue",
+        ) from None

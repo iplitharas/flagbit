@@ -8,3 +8,11 @@ class NotFoundError(Exception):
 
 class DeleteAllError(Exception):
     pass
+
+
+class RepositoryConnError(Exception):
+    pass
+
+
+class FlagPersistenceError(Exception):
+    pass

@@ -5,7 +5,12 @@ from pytz import utc
 
 from src._types import EXP_UNIT_T
 from src.domain.flag import Flag
-from src.exceptions import FlagNotFoundError, NotFoundError
+from src.exceptions import (
+    FlagNotFoundError,
+    FlagPersistenceError,
+    NotFoundError,
+    RepositoryConnError,
+)
 from src.helpers import new_expiration_date
 from src.repo.base import FlagsShipRepo
 
@@ -38,43 +43,52 @@ class FlagBitService:
         await self.repo.store(flag=new_flag)
         return new_flag
 
-    async def get_flag(self, flag_id: str) -> Flag | None:
-        return await self.repo.get_by_id(_id=flag_id)
+    async def get_flag(self, flag_id: str) -> Flag:
+        try:
+            return await self.repo.get_by_id(_id=flag_id)
+        except NotFoundError:
+            raise FlagNotFoundError from None
+        except RepositoryConnError:
+            raise FlagPersistenceError from None
 
     async def is_enabled(self, name: str) -> bool:
         """
         Try to find the `Flag` by `name` and return its `value`.
         If the `Flag` is not found, raise a `ValueError`.
         """
-        flag = await self.repo.get_by_name(name=name)
-        if flag is None:
-            raise FlagNotFoundError
-        return False if flag.expired else flag.value
+        try:
+            if flag := await self.repo.get_by_name(name=name):
+                return False if flag.expired else flag.value
+            return False  # noqa: TRY300
+        except NotFoundError:
+            raise FlagNotFoundError from None
+        except RepositoryConnError:
+            raise FlagPersistenceError from None
 
-    async def update_flag(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:
+    async def update_flag(self, flag_id: str, updated_fields: FlagAllowedUpdates) -> Flag:  # type: ignore[return]
         """
         Users can `update` existing `Flags` in their `store` by `id`.
         """
-        if existing_flag := await self.repo.get_by_id(_id=flag_id):
-            return await self._update_flag(flag=existing_flag, updated_fields=updated_fields)
-        raise FlagNotFoundError
-
-    async def _update_flag(self, flag: Flag, updated_fields: FlagAllowedUpdates) -> Flag:
-        """
-        Internal method to update a flag with the provided fields.
-        """
-        for key, value in updated_fields.items():
-            if value is not None:
-                setattr(flag, key, value)
-        flag.date_updated = datetime.now(tz=utc)
-        await self.repo.update(flag)
-        return flag
+        try:
+            if existing_flag := await self.repo.get_by_id(_id=flag_id):
+                for key, value in updated_fields.items():
+                    if value is not None:
+                        setattr(existing_flag, key, value)
+                existing_flag.date_updated = datetime.now(tz=utc)
+                return await self.repo.update(existing_flag)
+        except NotFoundError:
+            raise FlagNotFoundError from None
+        except RepositoryConnError:
+            raise FlagPersistenceError from None
 
     async def get_all_flags(self, flag_name: str | None = None) -> list[Flag] | None:  # noqa: ARG002
         # if flag_name:
         #     flag = self.repo.get_all(name=flag_name)
         #     return [flag] if flag else []
-        return await self.repo.get_all()
+        try:
+            return await self.repo.get_all()
+        except RepositoryConnError:
+            raise FlagPersistenceError from None
 
     async def delete_flag(self, flag_id: str) -> None:
         """
@@ -85,3 +99,5 @@ class FlagBitService:
         except NotFoundError:
             err_msg = f"Flag with id: `{flag_id}` not found for deletion."
             raise FlagNotFoundError(err_msg) from None
+        except RepositoryConnError:
+            raise FlagPersistenceError from None

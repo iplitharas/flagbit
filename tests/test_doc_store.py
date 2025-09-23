@@ -204,7 +204,7 @@ async def test_doc_store_get_by_id_method_with_invalid_id():
     Given a `DocStoreRepo` instance with its `MongoDBAsyncClient` mocked
     When I call the `get_by_id` method with a non-existing Flag ID
     Then I'm expecting the `find_one` method of the collection to be called once with the correct filter
-         and None to be returned
+         and an exception `NotFoundError` to be raised
     """
     # Given
     mocked_client = MagicMock(spec=MongoDBAsyncClient)
@@ -217,14 +217,14 @@ async def test_doc_store_get_by_id_method_with_invalid_id():
     non_existing_id = "non_existing_id"
 
     # When
-    result = await doc_store.get_by_id(_id=non_existing_id)
+    with pytest.raises(NotFoundError):
+        await doc_store.get_by_id(_id=non_existing_id)
 
-    # Then
-    assert fake_collection.find_one.call_count == 1, "find_one was not called exactly once"
-    assert fake_collection.find_one.call_args[0][0] == {"_id": non_existing_id}, (
-        "find_one was not called with the correct filter"
-    )
-    assert result is None, "get_by_id did not return None for non-existing ID"
+        # Then
+        assert fake_collection.find_one.call_count == 1, "find_one was not called exactly once"
+        assert fake_collection.find_one.call_args[0][0] == {"_id": non_existing_id}, (
+            "find_one was not called with the correct filter"
+        )
 
 
 @pytest.mark.asyncio
@@ -263,7 +263,7 @@ async def test_doc_store_get_by_name_method_with_invalid_name():
     Given a `DocStoreRepo` instance with its `MongoDBAsyncClient` mocked
     When I call the `get_by_name` method with a non-existing Flag name
     Then I'm expecting the `find_one` method of the collection to be called once with the correct filter
-         and None to be returned
+         and an exception `NotFoundError` to be raised
     """
     # Given
     mocked_client = MagicMock(spec=MongoDBAsyncClient)
@@ -276,14 +276,13 @@ async def test_doc_store_get_by_name_method_with_invalid_name():
     non_existing_name = "non_existing_name"
 
     # When
-    result = await doc_store.get_by_name(name=non_existing_name)
-
-    # Then
-    assert fake_collection.find_one.call_count == 1, "find_one was not called exactly once"
-    assert fake_collection.find_one.call_args[0][0] == {"name": non_existing_name}, (
-        "find_one was not called with the correct filter"
-    )
-    assert result is None, "get_by_name did not return None for non-existing name"
+    with pytest.raises(NotFoundError):
+        await doc_store.get_by_name(name=non_existing_name)
+        # Then
+        assert fake_collection.find_one.call_count == 1, "find_one was not called exactly once"
+        assert fake_collection.find_one.call_args[0][0] == {"name": non_existing_name}, (
+            "find_one was not called with the correct filter"
+        )
 
 
 @pytest.mark.asyncio

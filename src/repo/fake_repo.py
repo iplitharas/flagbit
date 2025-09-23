@@ -16,7 +16,11 @@ class FakeInMemoryRepo:
         """
         Retrieve a Flag by its ID from the repository.
         """
-        return self.mem_store.get(_id)
+        flag = self.mem_store.get(_id)
+        if flag:
+            return flag
+        error_msg = f"Flag with id: `{_id}` not found."
+        raise NotFoundError(error_msg) from None
 
     async def get_by_name(self, name: str) -> Flag | None:
         """
@@ -41,7 +45,7 @@ class FakeInMemoryRepo:
             self.mem_store[flag.id] = flag
             return flag
         error_msg = f"Flag with id: `{flag.id}` not found for update."
-        raise NotFoundError(error_msg)
+        raise NotFoundError(error_msg) from None
 
     async def delete(self, _id: str) -> None:
         """
