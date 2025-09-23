@@ -28,14 +28,20 @@ class FlagsShipRepo(Protocol):
         """
         raise NotImplementedError
 
-    async def update(self, flag: Flag) -> bool:
+    async def update(self, flag: Flag) -> Flag:
         """
         Update an existing Flag in the repository.
         """
         raise NotImplementedError
 
-    async def delete(self, _id: str) -> bool:
+    async def delete(self, _id: str) -> None:
         """
         Delete a Flag by its ID from the repository.
+        """
+        raise NotImplementedError
+
+    async def delete_all(self) -> None:
+        """
+        Delete all Flags from the repository.
         """
         raise NotImplementedError

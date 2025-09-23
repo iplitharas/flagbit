@@ -7,6 +7,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.domain.flag import Flag
+from src.exceptions import NotFoundError
 from src.repo.doc_store import DocStoreRepo, MongoDBAsyncClient, flag_to_document
 
 
@@ -37,7 +38,7 @@ async def test_doc_store_delete_all_method():
     assert fake_collection.delete_many.call_args[0][0] == {}, (
         "delete_many was not called with an empty filter"
     )
-    assert result is True, "delete_all did not return True"
+    assert result is None, "delete_all should not raise an exception in good path"
 
 
 @pytest.mark.asyncio
@@ -68,7 +69,7 @@ async def test_doc_store_delete_method_with_valid_id():
     assert fake_collection.delete_one.call_args[0][0] == {"_id": valid_id}, (
         "delete_one was not called with the correct filter"
     )
-    assert result is True, "delete did not return True"
+    assert result is None, "delete should not raise an exception in good path"
 
 
 @pytest.mark.asyncio
@@ -76,7 +77,8 @@ async def test_doc_store_delete_method_with_invalid_id():
     """
     Given a `DocumentStore` instance with it's `MongoDBAsyncClient` mocked
     When I call, the `delete` method with an invalid ID.
-    Then I'm expecting the `delete_one` method of the collection to be called once with the correct filter.
+    Then I'm expecting the `delete_one` method of the collection to be called once with the correct filter
+          and an `NotFoundError` to be raised.
     """
     # Given
     mocked_client = MagicMock(spec=MongoDBAsyncClient)
@@ -92,14 +94,15 @@ async def test_doc_store_delete_method_with_invalid_id():
     invalid_id = "invalid_id"
 
     # When
-    result = await doc_store.delete(_id=invalid_id)
+    with pytest.raises(NotFoundError):
+        result = await doc_store.delete(_id=invalid_id)
 
     # Then
     assert fake_collection.delete_one.call_count == 1, "delete_one was not called exactly once"
     assert fake_collection.delete_one.call_args[0][0] == {"_id": invalid_id}, (
         "delete_one was not called with the correct filter"
     )
-    assert result is False, "delete did not return False"
+
 
 
 @pytest.mark.asyncio
@@ -135,7 +138,7 @@ async def test_doc_store_update_method_with_existing_flag():
     assert fake_collection.replace_one.call_args[0][1] == flag_to_document(existing_flag), (
         "replace_one was not called with the correct document"
     )
-    assert result is True, "update did not return True"
+    assert result == existing_flag, "update did not return the expected Flag"
 
 
 @pytest.mark.asyncio

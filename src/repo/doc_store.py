@@ -5,6 +5,10 @@ Implements a document storage repo for MongoDB.
 from dataclasses import asdict
 from typing import TYPE_CHECKING, Any
 
+from loguru import logger
+
+from src.exceptions import NotFoundError
+
 if TYPE_CHECKING:
     from pymongo.results import DeleteResult
 
@@ -67,26 +71,32 @@ class DocStoreRepo:
         documents = await coll.find().to_list(limit)
         return [document_to_flag(doc=document) for document in documents]
 
-    async def update(self, flag: Flag) -> bool:
+    async def update(self, flag: Flag) -> Flag:
         """
         Update an existing Flag document in the MongoDB collection.
         """
         collection = self._client.get_flags_collection()
         result = await collection.replace_one({"_id": str(flag.id)}, flag_to_document(flag))
-        return result.modified_count > 0
+        if result.matched_count == 0:
+            err_msg = f"Flag with id: `{flag.id}` not found for update."
+            raise NotFoundError(err_msg)
+        return flag
 
-    async def delete(self, _id: str) -> bool:
+    async def delete(self, _id: str) -> None:
         """
         Delete a Flag document by its ID from the MongoDB collection.
         """
         collection = self._client.get_flags_collection()
         result: DeleteResult = await collection.delete_one({"_id": _id})
-        return result.deleted_count > 0
+        if result.deleted_count == 0:
+            err_msg = f"Flag with id `{_id}` not found for deletion."
+            raise NotFoundError(err_msg)
 
-    async def delete_all(self) -> bool:
+    async def delete_all(self) -> None:
         """
         Delete all Flag documents from the MongoDB collection.
         """
         collection = self._client.get_flags_collection()
         result: DeleteResult = await collection.delete_many({})
-        return result.deleted_count > 0
+        if result.deleted_count == 0:
+            logger.warning("No documents found to delete.")

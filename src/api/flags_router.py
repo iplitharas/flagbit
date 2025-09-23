@@ -105,6 +105,7 @@ async def delete_flag(
     flag_id: str,
     flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)],
 ) -> None:
-    success = await flagbit.delete_flag(flag_id=flag_id)
-    if not success:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found")
+    try:
+        await flagbit.delete_flag(flag_id=flag_id)
+    except FlagNotFoundError:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Flag not found") from None

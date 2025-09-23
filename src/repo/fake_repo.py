@@ -1,4 +1,5 @@
 from src.domain.flag import Flag
+from src.exceptions import NotFoundError
 
 
 class FakeInMemoryRepo:
@@ -32,20 +33,22 @@ class FakeInMemoryRepo:
         """
         return list(self.mem_store.values())[:limit]
 
-    async def update(self, flag: Flag) -> bool:
+    async def update(self, flag: Flag) -> Flag:
         """
         Update an existing Flag in the repository.
         """
         if flag.id in self.mem_store:
             self.mem_store[flag.id] = flag
-            return True
-        return False
+            return flag
+        error_msg = f"Flag with id: `{flag.id}` not found for update."
+        raise NotFoundError(error_msg)
 
-    async def delete(self, _id: str) -> bool:
+    async def delete(self, _id: str) -> None:
         """
         Delete a Flag by its ID from the repository.
         """
         if _id in self.mem_store:
             del self.mem_store[_id]
-            return True
-        return False
+            return
+        error_msg = f"Flag with id `{_id}` not found for deletion."
+        raise NotFoundError(error_msg)

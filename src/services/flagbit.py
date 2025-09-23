@@ -5,7 +5,7 @@ from pytz import utc
 
 from src._types import EXP_UNIT_T
 from src.domain.flag import Flag
-from src.exceptions import FlagNotFoundError
+from src.exceptions import FlagNotFoundError, NotFoundError
 from src.helpers import new_expiration_date
 from src.repo.base import FlagsShipRepo
 
@@ -76,8 +76,12 @@ class FlagBitService:
         #     return [flag] if flag else []
         return await self.repo.get_all()
 
-    async def delete_flag(self, flag_id: str) -> bool:
+    async def delete_flag(self, flag_id: str) -> None:
         """
         Users can `delete` existing `Flags` in their `store` by `id`.
         """
-        return await self.repo.delete(_id=flag_id)
+        try:
+            await self.repo.delete(_id=flag_id)
+        except NotFoundError:
+            err_msg = f"Flag with id: `{flag_id}` not found for deletion."
+            raise FlagNotFoundError(err_msg) from None
