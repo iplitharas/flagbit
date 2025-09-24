@@ -25,7 +25,7 @@ class FlagBitService:
     def __init__(self, repo: FlagsShipRepo) -> None:
         self.repo = repo
 
-    async def create_flag(
+    async def create_flag(  # noqa: PLR0913
         self,
         name: str,
         value: bool,  # noqa: FBT001  Boolean-typed positional argument in function definition
@@ -47,6 +47,9 @@ class FlagBitService:
             raise FlagPersistenceError from None
 
     async def get_flag(self, flag_id: str) -> Flag:
+        """
+        Get `Flag` by it's id.
+        """
         try:
             return await self.repo.get_by_id(_id=flag_id)
         except RepositoryNotFoundError:
@@ -57,7 +60,7 @@ class FlagBitService:
     async def is_enabled(self, name: str) -> bool:
         """
         Try to find the `Flag` by `name` and return its `value`.
-        If the `Flag` is not found, raise a `ValueError`.
+        raises: `RepositoryNotFoundError` and `RepositoryConnectionError`
         """
         try:
             if flag := await self.repo.get_by_name(name=name):
