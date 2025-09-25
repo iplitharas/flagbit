@@ -116,7 +116,7 @@
     }
   }
 
-  async function toggleFlagAPI(id, value) {
+  async function toggleFlagAPI(name,id, value) {
     try {
       const res = await fetch(`/flags/${encodeURIComponent(id)}`, {
         method: 'PATCH',
@@ -131,12 +131,12 @@
         await fetchFlags();
         return false;
       }
-      showToast(`Flag ${value ? 'ON' : 'OFF'}`, value ? 'success' : 'danger');
+      showToast(`Flag ${name} ${value ? 'ON' : 'OFF'}`, value ? 'success' : 'danger');
       await fetchFlags();
       return true;
     } catch (err) {
       console.error(err);
-      showToast('Error toggling flag', 'danger');
+      showToast(`Error toggling flag ${name}` , 'danger');
       return false;
     }
   }
@@ -214,7 +214,7 @@
       const switchEl = cardCol.querySelector('.retro-switch');
       switchEl.addEventListener('click', async () => {
 
-        await toggleFlagAPI(flag.id, !flag.value);
+        await toggleFlagAPI(flag.name, flag.id, !flag.value);
         renderFlags();
       });
 
