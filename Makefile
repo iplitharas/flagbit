@@ -31,19 +31,17 @@ up: ## Start containers 🐳
 down: ## Stop containers 🐳
 	docker compose down
 
-
 app-start: ## Start the FastAPI app 🚀
 	uv run uvicorn src.api.app:app  --reload
 
-
-docs-serve: ## Start the docs server with live reload 📚
+docs-local: ## Start the docs server with live reload 📚
 	uv run mkdocs serve
 
 build-docs: ## Build the docs site 📚
 	uv run mkdocs build
 
 .PHONY: help  install-hooks setup-local-env test test-cov \
- 		 check clean-hooks clean up down app-start docs-serve build-docs
+ 		 check clean-hooks clean up down app-start docs-local build-docs
 
 help:
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
