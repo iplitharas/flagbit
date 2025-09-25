@@ -163,9 +163,8 @@
     visible.forEach(flag => {
       let expiryText = 'No expiration';
       let expireBadgeHTML = '';
-      let isExpired = false;
-
-      if (flag.expiration_date) {
+      let isExpired = flag.expired;
+      if (flag.expired) {
         const expDate = new Date(flag.expiration_date);
         if (isNaN(expDate.getTime())) {
           expiryText = 'Invalid date';
@@ -214,10 +213,7 @@
       // Retro switch handler
       const switchEl = cardCol.querySelector('.retro-switch');
       switchEl.addEventListener('click', async () => {
-        if (isExpired) {
-          showToast('Flag is expired and cannot be toggled', 'danger');
-          return;
-        }
+
         await toggleFlagAPI(flag.id, !flag.value);
         renderFlags();
       });
