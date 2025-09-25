@@ -15,6 +15,13 @@
 [![Code Style](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 
+**[Homepage] &nbsp;&nbsp;&bull;&nbsp;&nbsp;**
+**[Installation] &nbsp;&nbsp;&bull;&nbsp;&nbsp;**
+**[Getting Started] &nbsp;&nbsp;&bull;&nbsp;&nbsp;**
+
+[Homepage]: https://iplitharas.github.io/flagbit/
+[Installation]: https://iplitharas.github.io/flagbit/install-and-setup
+[Getting Started]:https://iplitharas.github.io/flagbit/tutorial
 </div>
 
 ## Table of Contents
