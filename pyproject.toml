@@ -54,7 +54,6 @@ lint.ignore = [
     "COM812", # line break before binary operator (handled by formatter)
     "ERA001", # Found commented-out code
     "PGH003", # Use specific rule codes when ignoring type issues
-    "ANN101", #  Missing type annotation for `self` in method
 ]
 
 # Maximum line length (matches Black’s default)

@@ -25,7 +25,7 @@ class FlagBitService:
     def __init__(self, repo: FlagsShipRepo) -> None:
         self.repo = repo
 
-    async def create_flag(  # noqa: PLR0913
+    async def create_flag(
         self,
         name: str,
         value: bool,  # noqa: FBT001  Boolean-typed positional argument in function definition
