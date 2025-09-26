@@ -28,7 +28,7 @@ class FlagBitService:
     async def create_flag(
         self,
         name: str,
-        value: bool,  # noqa: FBT001  Boolean-typed positional argument in function definition
+        value: bool,  # noqa: FBT001 Boolean-typed positional argument in function definition
         desc: str | None = None,
         exp_unit: EXP_UNIT_T = "w",
         exp_value: int = 4,

@@ -12,7 +12,7 @@ class FakeInMemoryRepo:
         """
         self.mem_store[flag.id] = flag
 
-    async def get_by_id(self, _id: str) -> Flag | None:
+    async def get_by_id(self, _id: str) -> Flag:
         """
         Retrieve a Flag by its ID from the repository.
         """
@@ -22,14 +22,15 @@ class FakeInMemoryRepo:
         error_msg = f"Flag with id: `{_id}` not found."
         raise RepositoryNotFoundError(error_msg) from None
 
-    async def get_by_name(self, name: str) -> Flag | None:
+    async def get_by_name(self, name: str) -> Flag:
         """
         Retrieve a Flag by its name from the repository.
         """
         for flag in self.mem_store.values():
             if flag.name == name:
                 return flag
-        return None
+        error_msg = f"Flag with name: `{name}` not found."
+        raise RepositoryNotFoundError(error_msg)
 
     async def get_all(self, limit: int = 100) -> list[Flag]:
         """
@@ -56,3 +57,9 @@ class FakeInMemoryRepo:
             return
         error_msg = f"Flag with id `{_id}` not found for deletion."
         raise RepositoryNotFoundError(error_msg)
+
+    async def delete_all(self) -> None:
+        """
+        Delete all Flags from the repository.
+        """
+        self.mem_store = {}
