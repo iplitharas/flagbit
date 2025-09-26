@@ -42,7 +42,7 @@ class FlagBitService:
             )
             new_flag = Flag(name=name, value=value, desc=desc, expiration_date=expiration_date)
             await self.repo.store(flag=new_flag)
-            return new_flag  # noqa: TRY300
+            return new_flag
         except RepositoryConnectionError:
             raise FlagPersistenceError from None
 
@@ -57,7 +57,7 @@ class FlagBitService:
         except RepositoryConnectionError:
             raise FlagPersistenceError from None
 
-    async def is_enabled(self, name: str) -> bool:
+    async def is_enabled(self, name: str) -> bool | None:
         """
         Try to find the `Flag` by `name` and return its `value`.
         raises: `RepositoryNotFoundError` and `RepositoryConnectionError`
@@ -65,7 +65,8 @@ class FlagBitService:
         try:
             if flag := await self.repo.get_by_name(name=name):
                 return False if flag.expired else flag.value
-            return False  # noqa: TRY300
+
+            return None
         except RepositoryNotFoundError:
             raise FlagNotFoundError from None
         except RepositoryConnectionError:

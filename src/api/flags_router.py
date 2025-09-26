@@ -41,7 +41,7 @@ async def get_flag_value(
     flag_name: str, flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)]
 ) -> bool:
     try:
-        return await flagbit.is_enabled(name=flag_name)
+        return await flagbit.is_enabled(name=flag_name)  # type: ignore[return-value]
     except FlagNotFoundError as e:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=str(e)) from e
     except FlagPersistenceError:
