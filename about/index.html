@@ -9,8 +9,10 @@
       
       
       
-        <link rel="prev" href="../install_and_setup/">
+        <link rel="prev" href="..">
       
+      
+        <link rel="next" href="../install_and_setup/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -18,7 +20,7 @@
     
     
       
-        <title>Tutorial - Flagbit  📚</title>
+        <title>About - Flagbit  📚</title>
       
     
     
@@ -91,7 +93,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tutorial
+              About
             
           </span>
         </div>
@@ -206,10 +208,17 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../about/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -220,6 +229,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -250,17 +260,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../tutorial/" class="md-nav__link">
         
   
   
@@ -271,7 +274,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -308,9 +310,29 @@
 
 
 
-  <h1>Tutorial</h1>
+  <h1>About</h1>
 
-
+<p><strong><em>Flagbit</em></strong> is an <em>open source</em> feature flag library for Python with a simple goal: 
+make it easy to turn features <strong>on</strong> and <strong>off</strong>, everywhere.</p>
+<p>It’s inspired by <a href="https://docs.djangoproject.com/en/5.2/ref/contrib/admin/">Django Admin</a>, simple to set up, batteries included,
+and designed to give you a central place to manage things that otherwise get messy.</p>
+<p>With <strong><em>Flagbit</em></strong> you get:</p>
+<ul>
+<li>a clean Python API for backend usage,</li>
+<li>an HTTP API so your frontend (or any service) can fetch flag states,</li>
+<li>and a flexible logic layer that keeps everything consistent across your stack.</li>
+</ul>
+<p>Instead of scattering <code>if some_feature_enabled</code>: checks throughout your code,
+you define flags once and consume them anywhere.</p>
+<p>Key ideas:</p>
+<ul>
+<li>🗄 Database agnostic: use any database you like for flag storage.</li>
+<li>🎛 Centralized overrides: frontend or backend can override behavior safely.</li>
+<li>🌍 API everywhere: expose flags over HTTP so any codebase, not just Python, can use them.</li>
+<li>🔮 Future-ready: the API design paves the way for SDKs in other languages, so your whole system can share the same flag infrastructure.</li>
+</ul>
+<p>The goal is a <em>full-stack feature flagging solution</em> that feels natural in Python,
+is easy to adopt today, and grows with you tomorrow.</p>
 
 
 
