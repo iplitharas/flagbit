@@ -73,10 +73,32 @@
                                     <option value="false">OFF</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <input type="date" id="flagExpiry" class="form-control">
-                                <div class="muted-small">Expiration date</div>
-                            </div>
+                                <div class="col-md-3">
+                                  <div class="input-group">
+                                    <input
+                                      type="number"
+                                      id="expiryAmount"
+                                      class="form-control"
+                                      min="1"
+                                      step="1"
+                                      placeholder="7"
+                                      aria-label="Expiration amount"
+                                    />
+                                    <select
+                                      id="expiryUnit"
+                                      class="form-select"
+                                      aria-label="Expiration unit"
+                                    >
+                                      <option value="days" selected>Days</option>
+                                      <option value="weeks">Weeks</option>
+                                      <option value="months">Months</option>
+                                      <option value="years">Years</option>
+                                    </select>
+                                  </div>
+                                  <div class="muted-small">Set expiration or leave empty for no expiration</div>
+                                </div>
+
+
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary w-100">Create</button>
                             </div>

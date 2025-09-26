@@ -282,12 +282,12 @@
          name,
          desc: document.getElementById('flagDesc').value.trim() || null,
          value: document.getElementById('flagValue').value === 'true',
-         expiration_date: document.getElementById('flagExpiry').value || null,
+         // expiration_date: document.getElementById('flagExpiry').value || null,
      };
      const ok = await createFlagAPI(payload);
      if (ok) {
          e.target.reset();
-         document.getElementById('flagExpiry').value = '';
+         // document.getElementById('flagExpiry').value = '';
      }
  });
 
