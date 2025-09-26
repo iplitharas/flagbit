@@ -19,6 +19,11 @@ check: ## Run ruff formatter,linter and mypy static analyzer and check code qual
 	uv  run ruff check src tests
 	uv run mypy src
 
+
+frontend-check: ## Run frontend checks 🧐
+	uv run js-beautify -r src/api/static/app.js
+
+
 clean:  ## Clean temp dirs 🧹
 	rm -rf  .pytest_cache coverage.xml .mypy_cache  .coverage .coverage.* htmlcov
 
@@ -41,7 +46,7 @@ build-docs: ## Build the docs site 📚
 	uv run mkdocs build
 
 .PHONY: help  install-hooks setup-local-env test test-cov \
- 		 check clean-hooks clean up down app-start docs-local build-docs
+ 		 check clean-hooks clean up down app-start docs-local build-docs frontend-check
 
 help:
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
