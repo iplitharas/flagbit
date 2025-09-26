@@ -155,10 +155,19 @@
     const filterName = (document.getElementById('filterName').value || '').toLowerCase();
     const filterValue = getFilterValue();
 
-    const visible = flags
-      .filter(f => (f.name || '').toLowerCase().includes(filterName))
-      .filter(f => (filterValue === 'all') || String(f.value) === filterValue)
-      .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  const visible = flags
+  .filter(f => (f.name || '').toLowerCase().includes(filterName))
+  .filter(f => {
+    if (filterValue === 'all') return true;
+    if (filterValue === 'expired') return Boolean(f.expired);
+    if (filterValue === 'true' || filterValue === 'false') {
+      return String(Boolean(f.value)) === filterValue;
+    }
+    return true;
+  })
+  .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+
 
     visible.forEach(flag => {
       let expiryText = 'No expiration';

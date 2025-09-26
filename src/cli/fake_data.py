@@ -25,7 +25,7 @@ def create_fake_flags(num_flags: int = 10) -> list[Flag]:
             value=fake.boolean(),
             date_created=fake.date_time(),
             date_updated=fake.date_time(),
-            expiration_date=fake.date_time() if fake.boolean(chance_of_getting_true=50) else None,
+            expiration_date=fake.date_time() if fake.boolean(chance_of_getting_true=30) else None,
         )
         flags.append(flag)
     return flags
