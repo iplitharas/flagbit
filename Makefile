@@ -19,10 +19,8 @@ check: ## Run ruff formatter,linter and mypy static analyzer and check code qual
 	uv  run ruff check src tests
 	uv run mypy src
 
-
 frontend-check: ## Run frontend checks 🧐
 	uv run js-beautify -r src/api/static/app.js
-
 
 clean:  ## Clean temp dirs 🧹
 	rm -rf  .pytest_cache coverage.xml .mypy_cache  .coverage .coverage.* htmlcov
