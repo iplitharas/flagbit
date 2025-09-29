@@ -32,11 +32,23 @@ class FakeInMemoryRepo:
         error_msg = f"Flag with name: `{name}` not found."
         raise RepositoryNotFoundError(error_msg)
 
-    async def get_all(self, limit: int = 100) -> list[Flag]:
+    async def get_all(
+        self,
+        flag_name: str | None = None,
+        flag_value: bool | None = None,  # noqa: FBT001
+        limit: int = 100,
+    ) -> list[Flag]:
         """
         Retrieve all Flags from the repository, up to the specified limit.
         """
-        return list(self.mem_store.values())[:limit]
+        existing_flags = list(self.mem_store.values())
+        if flag_name is not None:
+            existing_flags = [flag for flag in existing_flags if flag.name == flag_name]
+        if flag_value is not None:
+            existing_flags = [flag for flag in existing_flags if flag.value == flag_value]
+        if existing_flags:
+            return existing_flags[:limit]
+        return []
 
     async def update(self, flag: Flag) -> Flag:
         """
