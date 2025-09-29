@@ -28,7 +28,12 @@ class FlagsShipRepo(Protocol):
         """
         raise NotImplementedError
 
-    async def get_all(self, limit: int = 100) -> list[Flag]:
+    async def get_all(
+        self,
+        flag_name: str | None = None,
+        flag_value: bool | None = None,  # noqa: FBT001
+        limit: int = 100,
+    ) -> list[Flag]:
         """
         Retrieve all Flags from the repository, up to the specified limit.
         raises: `ServerSelectionTimeoutError` if the database server is unreachable.

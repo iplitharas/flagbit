@@ -91,12 +91,25 @@ class DocStoreRepo:
         raise RepositoryNotFoundError(msg)
 
     @handle_conn_error
-    async def get_all(self, limit: int = 100) -> list[Flag]:
+    async def get_all(
+        self,
+        flag_name: str | None = None,
+        flag_value: bool | None = None,  # noqa: FBT001
+        limit: int = 100,
+    ) -> list[Flag]:
         """
         Retrieve all Flag documents from the MongoDB collection, up to the specified limit.
         """
         coll = self._client.get_flags_collection()
-        documents = await coll.find().to_list(limit)
+        filters: dict[str, str | bool] = {}
+        if flag_name is not None:
+            filters["name"] = flag_name
+        if flag_value is not None:
+            filters["value"] = flag_value
+
+        logger.debug(f"Filtering flags with: {filters}")
+        documents = await coll.find(filters).to_list(limit)
+
         return [document_to_flag(doc=document) for document in documents]
 
     @handle_conn_error

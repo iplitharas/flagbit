@@ -20,10 +20,15 @@ flags_router = APIRouter()
     description="Retrieve all feature flags",
 )
 async def flags(
-    flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)], flag_name: str | None = None
+    flagbit: Annotated[FlagBitService, Depends(get_flag_bit_service)],
+    flag_name: str | None = None,
+    flag_value: bool | None = None,  # noqa: FBT001
+    expired: bool | None = None,  # noqa: FBT001
 ) -> list[Flag] | None:
     try:
-        return await flagbit.get_all_flags(flag_name=flag_name)
+        return await flagbit.get_all_flags(
+            flag_name=flag_name, flag_value=flag_value, expired=expired
+        )
     except FlagPersistenceError:
         raise HTTPException(
             status_code=HTTPStatus.SERVICE_UNAVAILABLE,

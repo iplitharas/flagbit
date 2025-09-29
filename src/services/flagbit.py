@@ -88,12 +88,20 @@ class FlagBitService:
         except RepositoryConnectionError:
             raise FlagPersistenceError from None
 
-    async def get_all_flags(self, flag_name: str | None = None) -> list[Flag] | None:  # noqa: ARG002
-        # if flag_name:
-        #     flag = self.repo.get_all(name=flag_name)
-        #     return [flag] if flag else []
+    async def get_all_flags(
+        self,
+        flag_name: str | None = None,
+        flag_value: bool | None = None,  # noqa: FBT001
+        expired: bool | None = None,  # noqa: FBT001
+    ) -> list[Flag] | None:
         try:
-            return await self.repo.get_all()
+            flags = await self.repo.get_all(
+                flag_name=flag_name,
+                flag_value=flag_value,
+            )
+            if expired is not None:
+                flags = [flag for flag in flags if flag.expired == expired]
+            return flags
         except RepositoryConnectionError:
             raise FlagPersistenceError from None
 
